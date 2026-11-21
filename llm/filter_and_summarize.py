@@ -19,6 +19,7 @@ filter_and_summarize.py
 
 import json
 import os
+import time
 from itertools import combinations
 
 
@@ -57,13 +58,29 @@ def filter_and_summarize_papers(
         return []
 
     prompt = _build_paper_prompt(papers, keywords, top_n, profile=prompt_profile)
-    try:
-        raw = _call_llm(prompt, llm_provider, api_key, custom_llm)
-    except Exception as e:
-        print(f"      [LLM] 论文筛选 API 调用失败: {type(e).__name__}: {e}")
-        raw = ""
+    raw = ""
+    last_error: Exception | None = None
+    for attempt in range(2):
+        try:
+            raw = _call_llm(prompt, llm_provider, api_key, custom_llm)
+            break
+        except Exception as e:
+            last_error = e
+            print(f"      [LLM] 第 {attempt + 1}/2 次调用失败: {type(e).__name__}: {e}",
+                  flush=True)
+            message = str(e).lower()
+            if "401" in message or "authentication" in message or "invalid" in message:
+                print("       ↳ 密钥被拒：确认 LLM_API_KEY 是 platform.deepseek.com 签发的"
+                      " key，复制时没带入空格或换行，且账户有余额", flush=True)
+            if attempt == 0:
+                time.sleep(5)
+    if not raw:
+        # 不再用占位文案凑数发信：模型不可用就当本次推送失败，让 workflow 变红
+        raise RuntimeError(f"模型调用失败，已中止本次推送：{last_error}") from last_error
     results = _parse_json_response(raw)
     print(f"      [LLM] 论文响应字符数={len(raw)}, 解析结果数={len(results)}", flush=True)
+    if not results:
+        raise RuntimeError("模型返回的内容无法解析为 JSON，已中止本次推送（避免发送空摘要邮件）")
 
     # 建立 id → paper 映射
     id_map = {p["id"]: p for p in papers}
@@ -91,12 +108,10 @@ def filter_and_summarize_papers(
 
     # 若 LLM 解析完全失败
     if not output:
-        fallback = papers[:top_n]
-        for p in fallback:
-            p["score"] = 0
-            p["summary_zh"] = "（LLM 解析失败，请检查 API 响应）"
-            p["detail_zh"] = ""
-        output = fallback
+        # 全部低分或模型没给出任何可用结果：同样视为失败，不发空邮件
+        raise RuntimeError(
+            f"模型未返回可用结果（评分均低于 min_score={min_score} 或 id 全部对不上），已中止推送"
+        )
 
     return output
 

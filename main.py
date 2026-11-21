@@ -211,8 +211,13 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
                     p["detail_zh"]  = "论文做了什么：提出了一种新的方法解决当前问题。\n核心创新点：引入了全新的模型架构。\n主要结论：在多个基准上超越了现有方法。"
                 print(f"      [DRY-RUN] 跳过 LLM，直接取前 {len(papers)} 篇")
             else:
-                papers = entropy_filter_papers(candidates, keywords, max_papers,
-                                               llm_provider=llm_provider, api_key=llm_api_key, custom_llm=custom_llm)
+                try:
+                    papers = entropy_filter_papers(candidates, keywords, max_papers,
+                                                   llm_provider=llm_provider, api_key=llm_api_key, custom_llm=custom_llm)
+                except Exception as exc:
+                    print(f"      ❌ 模型筛选失败，本次不发送邮件：{exc}", flush=True)
+                    _save_skip_html(f"熵筛选阶段模型调用失败（{type(exc).__name__}），本次未发送邮件。")
+                    raise
                 print(f"      精选论文: {len(papers)} 篇")
         else:
             print(f"[2/5] LLM 筛选论文（provider: {llm_provider}）")
@@ -223,7 +228,15 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
                     p["detail_zh"]  = "论文做了什么：提出了一种新的方法解决当前问题。\n核心创新点：引入了全新的模型架构。\n主要结论：在多个基准上超越了现有方法。"
                 print(f"      [DRY-RUN] 跳过 LLM，直接取前 {len(papers)} 篇")
             else:
-                papers = filter_and_summarize_papers(candidates, keywords, max_papers, llm_provider, llm_api_key, min_score=min_score, custom_llm=custom_llm, prompt_profile=prompt_profile)
+                try:
+                    papers = filter_and_summarize_papers(candidates, keywords, max_papers, llm_provider, llm_api_key, min_score=min_score, custom_llm=custom_llm, prompt_profile=prompt_profile)
+                except Exception as exc:
+                    print(f"      ❌ 模型筛选失败，本次不发送邮件：{exc}", flush=True)
+                    _save_skip_html(
+                        f"模型筛选失败（{type(exc).__name__}），本次未发送邮件。"
+                        "请检查 LLM_API_KEY 是否有效、llm_provider 是否与 key 匹配。"
+                    )
+                    raise
                 print(f"      精选论文: {len(papers)} 篇")
     else:
         print(f"[2/5] 无候选论文，跳过筛选")
