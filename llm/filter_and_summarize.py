@@ -32,6 +32,7 @@ def filter_and_summarize_papers(
     min_score: int = 6,
     custom_llm: dict | None = None,
     prompt_profile: str = "ai",
+    min_papers: int = 0,
 ) -> list[dict]:
     """
     筛选论文并生成中文总结。
@@ -101,6 +102,16 @@ def filter_and_summarize_papers(
 
     # 按 min_score 门槛过滤，不强制凑满 top_n
     output = [p for p in all_scored if p.get("score", 0) >= min_score][:top_n]
+
+    # 保持每日推送的篇数下限：门槛卡得太狠时，用剩余候选里评分最高的补齐
+    if 0 < len(output) < min_papers:
+        picked = {p["id"] for p in output}
+        for paper in all_scored:
+            if len(output) >= min_papers:
+                break
+            if paper["id"] not in picked:
+                output.append(paper)
+        print(f"      [LLM] 达标篇数不足，已从小分候选补至 {len(output)} 篇", flush=True)
 
     # 兜底：全部低于门槛时返回最高分 1 篇，避免空邮件
     if not output and all_scored:

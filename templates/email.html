@@ -44,6 +44,14 @@ body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI
 .card-title a:hover { text-decoration: underline; }
 .card-byline { font-size: 11px; color: #999; }
 
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
 .summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
 .summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
 .summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
@@ -141,6 +149,16 @@ details summary:hover { background: #eef2ff; }
                   <a href="{{ p.url }}" target="_blank">{{ p.title }}</a>
                 </div>
                 <div class="card-byline">{{ p.authors | join(', ') }}</div>
+                <div class="card-meta">
+                  {% if p.rank %}<span class="rank-badge">{{ p.rank }}</span>{% endif %}
+                  {% if p.journal %}<span class="card-journal">{{ p.journal }}</span>{% endif %}
+                  {% if p.impact_factor %}
+                  <span class="badge-if">IF {{ p.impact_factor }}</span>
+                  {% elif p.journal %}
+                  <span class="badge-missing">IF 未收录</span>
+                  {% endif %}
+                  {% if p.evidence_label %}<span class="badge-evidence">{{ p.evidence_label }}</span>{% endif %}
+                </div>
                 {% if p.summary_zh %}
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
@@ -210,6 +228,10 @@ details summary:hover { background: #eef2ff; }
       </tr>
     {% endif %}
   </table>
+
+  {% if if_note %}
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">{{ if_note }}</p>
+  {% endif %}
 
   <!-- Footer -->
   <div class="footer">

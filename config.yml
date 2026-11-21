@@ -55,9 +55,20 @@ categories: []
 # 每日最多推送篇数（模型从候选池中精选）
 max_papers: 8
 
-# 相关性评分门槛（1-10），低于此分不推送，凑不满也不凑数
+# 篇数下限：模型评分达标不足这么多篇时，用剩余候选里评分最高的补齐
+# 配合 max_papers 把每日篇数控制在 5-10 篇
+min_papers: 5
+
+# 相关性评分门槛（1-10），低于此分不推送
 # 临床方向建议 7：低于 7 的多为机制/动物研究或人群不相关
 min_score: 7
+
+# 排序权重：最终按「证据等级 + 影响因子」加权排序
+# evidence 权重越大越偏向 RCT/Meta 分析；impact_factor 越大越偏向高影响因子期刊
+# 两者之和不必等于 1，程序内部各自归一化后加权
+rank_weights:
+  evidence: 0.5
+  impact_factor: 0.5
 
 # 候选池大小：先抓这么多篇带摘要的文献，再由模型评分筛选
 # 太大会撑爆单次 prompt，50~60 是比较稳的区间
@@ -70,6 +81,8 @@ prompt_profile: clinical
 
 # ── 邮件与 LLM 配置 ─────────────────────────────────────────
 # 发件邮箱服务商（163 / gmail / qq）
+# 收件人支持多个：在 GitHub Secrets 的 EMAIL_TO 里用英文逗号分隔即可，
+# 例如 a@qq.com,b@outlook.com —— 不需要新增 Secret，也不必改 workflow
 smtp_provider: "qq"
 
 # LLM 服务商（deepseek 国内访问快、便宜；也可用 zhipu / qwen / moonshot / openai）

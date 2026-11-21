@@ -22,6 +22,7 @@ def render_email(
     archive_url: str = None,
     paper_source: str = "arXiv",
     paper_notice: str | None = None,
+    if_note: str | None = None,
 ) -> str:
     """
     渲染 HTML 邮件正文。
@@ -60,5 +61,6 @@ def render_email(
         archive_url=archive_url,
         paper_source=paper_source,
         paper_notice=paper_notice,
+        if_note=if_note,
     )
     return html

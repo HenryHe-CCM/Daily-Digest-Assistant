@@ -27,6 +27,8 @@ import pytz
 
 from fetchers.arxiv_fetcher import fetch_papers
 from fetchers.pubmed_fetcher import fetch_pubmed_papers
+from fetchers.impact_factor import get_impact_factors
+from ranking import rank_papers
 from fetchers.semantic_scholar_fetcher import fetch_semantic_scholar_papers
 from fetchers.arxiv_schedule import (
     ET,
@@ -97,6 +99,8 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
     include_preprints = bool(cfg.get("pubmed_include_preprints", False))
     journal_filter    = cfg.get("pubmed_journal_filter") or None
     prompt_profile    = str(cfg.get("prompt_profile") or "ai").strip().lower()
+    min_papers        = int(cfg.get("min_papers", 0))
+    rank_weights      = cfg.get("rank_weights") or {}
 
     llm_api_key = get_env("LLM_API_KEY")
     email_user  = get_env("EMAIL_USER", required=not dry_run)
@@ -150,7 +154,8 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
         print(f"      候选文献: {len(candidates)} 篇")
         paper_notice = (
             f"按 PubMed 收录日期 {start_date} 至 {end_date} 检索（关键词限定标题/摘要字段），"
-            f"命中 {len(candidates)} 篇候选，再由模型按重症医学相关性评分筛选。"
+            f"命中 {len(candidates)} 篇候选，由模型按重症医学相关性评分筛选，"
+            f"最终按证据等级与影响因子排序。"
         )
         if not candidates:
             _save_skip_html(f"{start_date} 至 {end_date} 未检索到带摘要的相关文献。")
@@ -229,7 +234,7 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
                 print(f"      [DRY-RUN] 跳过 LLM，直接取前 {len(papers)} 篇")
             else:
                 try:
-                    papers = filter_and_summarize_papers(candidates, keywords, max_papers, llm_provider, llm_api_key, min_score=min_score, custom_llm=custom_llm, prompt_profile=prompt_profile)
+                    papers = filter_and_summarize_papers(candidates, keywords, max_papers, llm_provider, llm_api_key, min_score=min_score, custom_llm=custom_llm, prompt_profile=prompt_profile, min_papers=min_papers)
                 except Exception as exc:
                     print(f"      ❌ 模型筛选失败，本次不发送邮件：{exc}", flush=True)
                     _save_skip_html(
@@ -240,6 +245,26 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
                 print(f"      精选论文: {len(papers)} 篇")
     else:
         print(f"[2/5] 无候选论文，跳过筛选")
+
+    # Step 2.5: 补期刊影响因子与证据等级，并按两者排序
+    if_note = None
+    if papers:
+        issns = [p.get("issn") for p in papers if p.get("issn")]
+        metrics = get_impact_factors(issns) if issns else {}
+        for paper in papers:
+            record = metrics.get(paper.get("issn") or "") or {}
+            paper["impact_factor"] = record.get("impact_factor")
+            if not paper.get("journal"):
+                paper["journal"] = record.get("name") or ""
+        papers = rank_papers(papers, rank_weights)
+        missing = sum(1 for p in papers if p.get("impact_factor") is None)
+        print(f"      [排序] {len(issns)} 本期刊查到指标，{missing} 篇缺指标；"
+              f"已按证据等级 + 影响因子排序", flush=True)
+        if_note = (
+            "影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），"
+            "是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；"
+            "证据等级按 PubMed 文献类型与摘要设计特征归类。"
+        )
 
     # Step 3: 小红书抓取 + 筛选
     print(f"[3/5] 抓取小红书笔记")
@@ -276,7 +301,8 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
         archive_url = f"https://{owner}.github.io/{repo}/archive.html"
     html = render_email(papers, keywords, xhs_notes=xhs_notes, arxiv_rest=arxiv_rest,
                         display_date=target_date, archive_url=archive_url,
-                        paper_source=paper_source, paper_notice=paper_notice)
+                        paper_source=paper_source, paper_notice=paper_notice,
+                        if_note=if_note)
 
     with open("preview.html", "w", encoding="utf-8") as f:
         f.write(html)

@@ -153,6 +153,18 @@ def _parse_pubmed_article(article: ET.Element, keywords: list[str]) -> dict | No
     journal = _text(article.find(".//Journal/Title"))
     pub_types = [_text(pt) for pt in article.findall(".//PublicationTypeList/PublicationType")]
 
+    # ISSN 用于查期刊指标：优先电子版，其次印刷版，最后用 ISSNLinking
+    issn = ""
+    for node in article.findall(".//Journal/ISSN"):
+        if (node.get("IssnType") or "").lower() == "electronic":
+            issn = _text(node).strip()
+            break
+    if not issn:
+        node = article.find(".//Journal/ISSN")
+        issn = _text(node).strip() if node is not None else ""
+    if not issn:
+        issn = _text(article.find(".//MedlineJournalInfo/ISSNLinking")).strip()
+
     authors: list[str] = []
     for author in article.findall(".//AuthorList/Author")[:5]:
         last = _text(author.find("LastName"))
@@ -181,6 +193,7 @@ def _parse_pubmed_article(article: ET.Element, keywords: list[str]) -> dict | No
         "source": "PubMed",
         "link_label": "PubMed",
         "journal": journal,
+        "issn": issn,
         "pub_types": pub_types,
         "cited_by": None,
     }
@@ -346,6 +359,7 @@ def _epmc_to_paper(item: dict, keywords: list[str]) -> dict | None:
         "source": "Preprint" if is_preprint else "PubMed",
         "link_label": "预印本" if is_preprint else "PubMed",
         "journal": item.get("journalTitle") or "",
+        "issn": ((item.get("journalInfo") or {}).get("journal") or {}).get("issn") or "",
         "pub_types": (item.get("pubTypeList") or {}).get("pubType") or [],
         "cited_by": item.get("citedByCount"),
     }
