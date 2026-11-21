@@ -163,7 +163,10 @@ def _parse_pubmed_article(article: ET.Element, keywords: list[str]) -> dict | No
         elif collective:
             authors.append(collective)
 
-    url = f"https://doi.org/{doi}" if doi else f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+    # 临床场景优先给 PubMed 链接：doi.org 常跳到出版社付费墙，医院网络也常封
+    # 出版社域名；PubMed 页面免费显示摘要与 MeSH，更适合每天快速过一遍
+    url = (f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid
+           else f"https://doi.org/{doi}")
 
     return {
         "id": paper_id,
@@ -316,10 +319,10 @@ def _epmc_to_paper(item: dict, keywords: list[str]) -> dict | None:
     paper_id = (f"PMID:{pmid}" if pmid else
                 (f"DOI:{doi}" if doi else f"EPMC:{record_id}"))
 
-    if doi:
-        url = f"https://doi.org/{doi}"
-    elif pmid:
+    if pmid:
         url = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+    elif doi:
+        url = f"https://doi.org/{doi}"
     else:
         url = f"https://europepmc.org/article/{item.get('source', 'MED')}/{record_id}"
 
