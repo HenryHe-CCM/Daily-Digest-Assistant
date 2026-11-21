@@ -28,3 +28,5 @@ node_modules/
 .uv-python/
 candidates.json
 sample.png
+
+final.png

@@ -85,7 +85,7 @@ details summary:hover { background: #eef2ff; }
       {% if xhs_notes %}
       {% if xhs_notes %}<div class="pill">📕 小红书 <b>{{ xhs_notes | length }}</b> 条</div>{% endif %}
       {% endif %}
-      <div class="pill">关键词：{{ keywords | join(' · ') }}</div>
+      <div class="pill">关键词：{{ keywords[:6] | join(' · ') }}{% if keywords | length > 6 %} · 等 {{ keywords | length }} 个{% endif %}</div>
     </div>
   </div>
 
