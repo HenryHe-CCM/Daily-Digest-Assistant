@@ -21,3 +21,10 @@ preview_*.html
 
 # Node.js 依赖（小红书签名用）
 node_modules/
+
+# 本地试跑环境与产物（非上游内容）
+.venv312/
+.uv-cache/
+.uv-python/
+candidates.json
+sample.png

@@ -21,11 +21,12 @@ import argparse
 import os
 import sys
 import yaml
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 import pytz
 
 from fetchers.arxiv_fetcher import fetch_papers
+from fetchers.pubmed_fetcher import fetch_pubmed_papers
 from fetchers.semantic_scholar_fetcher import fetch_semantic_scholar_papers
 from fetchers.arxiv_schedule import (
     ET,
@@ -89,6 +90,14 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
     xhs_keywords   = cfg.get("xhs_keywords") or keywords
     xhs_pool       = cfg.get("xhs_candidate_pool", 30)
 
+    # 论文来源：pubmed = Europe PMC（临床/重症医学），arxiv = 原版行为
+    source_cfg        = str(cfg.get("paper_source") or "arxiv").strip().lower()
+    use_pubmed        = source_cfg in {"pubmed", "europepmc", "epmc"}
+    lookback_days     = int(cfg.get("lookback_days", 3))
+    include_preprints = bool(cfg.get("pubmed_include_preprints", False))
+    journal_filter    = cfg.get("pubmed_journal_filter") or None
+    prompt_profile    = str(cfg.get("prompt_profile") or "ai").strip().lower()
+
     llm_api_key = get_env("LLM_API_KEY")
     email_user  = get_env("EMAIL_USER", required=not dry_run)
     email_pass  = get_env("EMAIL_PASS", required=not dry_run)
@@ -119,7 +128,35 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
         if today_et.weekday() in {5, 6}:  # Sat, Sun
             arxiv_rest = True
 
-    if not arxiv_rest:
+    if use_pubmed:
+        # PubMed 没有 arXiv 那种"公告批次"概念，按首次发布日期回溯固定天数
+        arxiv_rest = False
+        end_date = target_date or date.today()
+        start_date = end_date - timedelta(days=lookback_days)
+        src_label = "PubMed + 预印本" if include_preprints else "PubMed"
+        print(f"[1/5] 搜索 {src_label} 文献，关键词: {keywords}")
+        print(f"      首发日期: {start_date} ~ {end_date}（回溯 {lookback_days} 天）")
+        paper_source = "PubMed"
+        try:
+            candidates = fetch_pubmed_papers(
+                keywords, candidate_pool, start_date, end_date,
+                include_preprints=include_preprints,
+                journal_filter=journal_filter,
+            )
+        except Exception as e:
+            print(f"      ❌ PubMed 抓取失败: {type(e).__name__}: {e}")
+            _save_skip_html(f"PubMed 检索失败（{type(e).__name__}），本次未生成摘要、未发送邮件。")
+            return
+        print(f"      候选文献: {len(candidates)} 篇")
+        paper_notice = (
+            f"按 PubMed 收录日期 {start_date} 至 {end_date} 检索（关键词限定标题/摘要字段），"
+            f"命中 {len(candidates)} 篇候选，再由模型按重症医学相关性评分筛选。"
+        )
+        if not candidates:
+            _save_skip_html(f"{start_date} 至 {end_date} 未检索到带摘要的相关文献。")
+            print("      ⚠ 零候选，已生成占位页，跳过推送")
+            return
+    elif not arxiv_rest:
         WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         print(f"[1/5] 搜索 arxiv 论文，关键词: {keywords}")
         print(f"      公告日(ET): {ann_date.strftime('%m-%d')} {WEEKDAY_NAMES[ann_date.weekday()]}")
@@ -186,7 +223,7 @@ def main(dry_run: bool = False, target_date: date | None = None, entropy_only: b
                     p["detail_zh"]  = "论文做了什么：提出了一种新的方法解决当前问题。\n核心创新点：引入了全新的模型架构。\n主要结论：在多个基准上超越了现有方法。"
                 print(f"      [DRY-RUN] 跳过 LLM，直接取前 {len(papers)} 篇")
             else:
-                papers = filter_and_summarize_papers(candidates, keywords, max_papers, llm_provider, llm_api_key, min_score=min_score, custom_llm=custom_llm)
+                papers = filter_and_summarize_papers(candidates, keywords, max_papers, llm_provider, llm_api_key, min_score=min_score, custom_llm=custom_llm, prompt_profile=prompt_profile)
                 print(f"      精选论文: {len(papers)} 篇")
     else:
         print(f"[2/5] 无候选论文，跳过筛选")

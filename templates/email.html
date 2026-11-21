@@ -27,6 +27,8 @@ body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI
 
 /* 卡片行 */
 .card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
 .card-row td:first-child { border-right: 1px solid #e8eaef; }
 .rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
 
@@ -81,7 +83,7 @@ details summary:hover { background: #eef2ff; }
       <div class="pill">📄 {{ paper_source }} <b>{{ papers | length }}</b> 篇</div>
       {% endif %}
       {% if xhs_notes %}
-      <div class="pill">📕 小红书 <b>{{ xhs_notes | length }}</b> 条</div>
+      {% if xhs_notes %}<div class="pill">📕 小红书 <b>{{ xhs_notes | length }}</b> 条</div>{% endif %}
       {% endif %}
       <div class="pill">关键词：{{ keywords | join(' · ') }}</div>
     </div>
@@ -92,16 +94,18 @@ details summary:hover { background: #eef2ff; }
   {% endif %}
 
   <!-- 两栏并排 -->
-  <table class="content-table">
+  <table class="content-table{% if xhs_notes %} two-col{% else %} single-col{% endif %}">
     <!-- 表头 -->
     <tr class="col-header-row">
       <th>
         &nbsp;&nbsp;<span class="col-header-arxiv">📄 {{ paper_source }} 论文</span>
         {% if arxiv_rest %}&ensp;<span style="color:#ccc;font-weight:400;font-size:11px;">（今日休息）</span>{% endif %}
       </th>
+      {% if xhs_notes %}
       <th>
         &nbsp;&nbsp;<span class="col-header-xhs">📕 小红书笔记</span>
       </th>
+      {% endif %}
     </tr>
 
     {% if papers and not arxiv_rest %}
@@ -162,6 +166,7 @@ details summary:hover { background: #eef2ff; }
           {% endif %}
         </td>
 
+        {% if xhs_notes %}
         <!-- 右栏：小红书 -->
         <td>
           {% if i < xhs_list | length %}
@@ -196,6 +201,7 @@ details summary:hover { background: #eef2ff; }
             <div class="rest-cell">—</div>
           {% endif %}
         </td>
+        {% endif %}
       </tr>
       {% endfor %}
     {% else %}

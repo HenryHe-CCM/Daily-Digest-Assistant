@@ -1,79 +1,85 @@
 # ============================================================
-# Arxiv Daily Digest — 用户配置文件
+# 重症医学每日文献推送 — 用户配置
+# 来源已从 arXiv 切换为 PubMed（Europe PMC），见 paper_source
 # Fork 后只需修改此文件 + 在 GitHub Secrets 中填写密钥
 # ============================================================
 
-# ── 论文关键词 ──────────────────────────────────────────────
-# 支持多个关键词，命中任意一个即进入候选（OR 关系）
-# 代码会自动将单词两两组合成高优先级短语（如 agent+skill → "agent skill"）
-# 专有框架名打分权重最高
-keywords:
-  - Jev
-  - LLM Agent
-  - Self-Evolving Agent
-  - Coding agent 
-  - RSI
+# ── 论文来源 ────────────────────────────────────────────────
+# pubmed = Europe PMC（PubMed 全量记录，临床/重症医学用这个）
+# arxiv  = 原版行为（计算机、数理方向）
+# 说明：arXiv 近 7 天「critical care」相关命中为 0 篇，临床文献必须走 PubMed
+paper_source: pubmed
 
-# ── arxiv 分类 ──────────────────────────────────────────────
-# 留空则搜索全部分类。常用：cs.AI cs.LG cs.RO cs.CL cs.CV
-categories:
-  - cs.AI
-  - cs.CL
-  - cs.LG
-  - cs.RO
-  - cs.CV
+# 回溯天数：按首次发布日期往回数几天
+# 周一跑要覆盖周末，建议 2~3；设太小会漏掉周末发表的文献
+lookback_days: 2
+
+# 是否纳入 medRxiv / bioRxiv 预印本（SRC:PPR）
+# 重症领域预印本更新快，但未经同行评议；页面上会标注「预印本」
+pubmed_include_preprints: false
+
+# 可选：只保留特定期刊（留空 = 不限制）
+# 想聚焦核心期刊时启用，例如：
+# pubmed_journal_filter:
+#   - Critical care
+#   - Intensive care medicine
+#   - American journal of respiratory and critical care medicine
+#   - Chest
+#   - Critical care medicine
+pubmed_journal_filter: []
+
+# ── 检索关键词（OR 关系，命中任意一个即进入候选）────────────
+# 用英文：PubMed 收录的是英文题录与摘要，中文词检索不到
+keywords:
+  - sepsis
+  - septic shock
+  - acute respiratory distress syndrome
+  - ARDS
+  - mechanical ventilation
+  - noninvasive ventilation
+  - high-flow nasal cannula
+  - extracorporeal membrane oxygenation
+  - ECMO
+  - intensive care unit
+  - critical illness
+  - vasopressor
+  - prone positioning
+  - acute kidney injury
+  - ventilator weaning
+  - delirium
+
+# 仅 arXiv 来源使用；PubMed 来源下留空即可
+categories: []
 
 # ── 推送数量与质量 ──────────────────────────────────────────
-# 每日最多推送篇数（LLM 从候选中精选）
-max_papers: 10
+# 每日最多推送篇数（模型从候选池中精选）
+max_papers: 8
 
-# LLM 相关性评分门槛（1-10）
-# 低于此分的论文不推送，即使凑不满 max_papers 也不推
-# 建议范围：6（默认，平衡） / 7-8（严格） / 4-5（宽松）
-min_score: 5
+# 相关性评分门槛（1-10），低于此分不推送，凑不满也不凑数
+# 临床方向建议 7：低于 7 的多为机制/动物研究或人群不相关
+min_score: 7
 
-# arxiv 初始搜索数量，由 LLM 从中筛选出 max_papers 篇
-# 建议 candidate_pool >= max_papers * 3
-candidate_pool: 80
+# 候选池大小：先抓这么多篇带摘要的文献，再由模型评分筛选
+# 太大会撑爆单次 prompt，50~60 是比较稳的区间
+candidate_pool: 50
+
+# ── 摘要口径 ────────────────────────────────────────────────
+# clinical = 按临床文献的结构解读（研究设计与人群 / 干预与主要结局 / 结论与局限）
+# ai       = 原版口径（做了什么 / 核心创新点 / 主要结论）
+prompt_profile: clinical
 
 # ── 邮件与 LLM 配置 ─────────────────────────────────────────
 # 发件邮箱服务商（163 / gmail / qq）
 smtp_provider: "163"
 
-# LLM 服务商
-# 内置可选：minimax / claude / openai / deepseek / zhipu / moonshot / qwen
-# 也可填自定义名称（需在下方 custom_llm 中定义）
-# 对应 API Key 填写到 GitHub Secrets 的 LLM_API_KEY
-llm_provider: my_api
+# LLM 服务商（deepseek 国内访问快、便宜；也可用 zhipu / qwen / moonshot / openai）
+# 对应的 API Key 填到 GitHub Secrets 的 LLM_API_KEY
+llm_provider: deepseek
 
-# ── 自定义 LLM 提供商（可选）────────────────────────────────
-# 当你使用的 API 不在内置列表中时，在此配置。
-# 大多数国产/自建 API 都使用 OpenAI 兼容协议，只需填写 base_url 和 model 即可。
-#
-# 配置项说明：
-#   - sdk: "openai"（绝大多数国产模型）或 "anthropic"（Claude 协议）
-#   - base_url: API 基础地址（使用服务商文档给出的完整路径）
-#   - model: 模型名称（请向你的 API 提供商确认）
-#
-# 使用示例（取消注释并修改即可）：
-# custom_llm:
-#   my_api:
-#     sdk: openai
-#     base_url: "https://my-api.com/v1"
-#     model: "gpt-4o"
-#
-# 当前配置：
-custom_llm:
-  my_api:
-    sdk: anthropic
-    base_url: "https://open.bigmodel.cn/api/anthropic"
-    model: "glm-5.3"
+# 自定义 LLM（不在内置列表时才需要）
+custom_llm: {}
 
 # ── 小红书配置 ───────────────────────────────────────────────
-# 留空则复用上方 keywords；如需单独配置小红书搜索词，在此填写
-# XHS_COOKIE 填写到 GitHub Secrets（不填则跳过小红书抓取，仅发 arXiv）
-# 示例：xhs_keywords: [AI工具, 产品评测, 开源项目]
+# 重症医学场景用不到，保持为空；XHS_COOKIE 不设置时会自动跳过
 xhs_keywords: []
-
-# 小红书初始搜索候选数量（每个关键词均分）
-xhs_candidate_pool: 80
+xhs_candidate_pool: 30

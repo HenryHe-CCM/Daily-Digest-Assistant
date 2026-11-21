@@ -30,6 +30,7 @@ def filter_and_summarize_papers(
     api_key: str,
     min_score: int = 6,
     custom_llm: dict | None = None,
+    prompt_profile: str = "ai",
 ) -> list[dict]:
     """
     筛选论文并生成中文总结。
@@ -55,7 +56,7 @@ def filter_and_summarize_papers(
     if not papers:
         return []
 
-    prompt = _build_paper_prompt(papers, keywords, top_n)
+    prompt = _build_paper_prompt(papers, keywords, top_n, profile=prompt_profile)
     try:
         raw = _call_llm(prompt, llm_provider, api_key, custom_llm)
     except Exception as e:
@@ -128,7 +129,8 @@ def _build_keyword_tiers(keywords: list[str]) -> tuple[list[str], list[str]]:
     return tier1, tier2
 
 
-def _build_paper_prompt(papers: list[dict], keywords: list[str], top_n: int) -> str:
+def _build_paper_prompt(papers: list[dict], keywords: list[str], top_n: int,
+                        profile: str = "ai") -> str:
     tier1, tier2 = _build_keyword_tiers(keywords)
     tier1_str = "、".join(f'"{p}"' for p in tier1)
     tier2_str = "、".join(f'"{w}"' for w in tier2)
@@ -140,6 +142,66 @@ def _build_paper_prompt(papers: list[dict], keywords: list[str], top_n: int) -> 
             f'ID: {p["id"]}\n标题: {p["title"]}\n摘要: {p["abstract"][:400]}'
         )
     papers_text = "\n\n---\n\n".join(items)
+
+    if profile == "clinical":
+        clinical_items = []
+        for p in papers:
+            meta = []
+            if p.get("journal"):
+                meta.append(p["journal"])
+            pub_types = p.get("pub_types") or []
+            if pub_types:
+                meta.append("/".join(pub_types[:3]))
+            if p.get("published"):
+                meta.append(str(p["published"]))
+            head = " | ".join(meta)
+            clinical_items.append(
+                f'ID: {p["id"]}\n标题: {p["title"]}\n'
+                + (f'期刊/类型/日期: {head}\n' if head else "")
+                + f'摘要: {p["abstract"][:700]}'
+            )
+        clinical_text = "\n\n---\n\n".join(clinical_items)
+
+        return f"""你是一位临床医学文献筛选助手，方向是重症医学（ICU / 急诊危重症）。
+关注方向：{all_kw_str}
+
+评分标准（严格按此执行，score 为 1-10 整数）：
+- score=9-10：研究对象是重症或危重患者（ICU、抢救室、机械通气、休克），且主题直接命中 {tier1_str}
+- score=7-8：主题明确命中 {tier2_str}，但研究人群或场景只是部分相关（如普通病房、择期手术、儿科）
+- score=4-6：顺带提及相关词，或为纯机制 / 动物 / 体外研究，对床旁决策的转化价值有限
+- score=1-3：几乎无关，仅因关键词宽泛被检索召回
+
+筛选规则：
+1. 纯体外实验或动物实验、且未报告临床结局的，score 不得超过 6
+2. 关键词只出现在参考文献、勘误、致谢或基金信息里的，score 不得超过 3
+3. 只输出评分最高的 {top_n} 篇，其余不输出
+
+下面是从 PubMed 检索到的 {len(papers)} 篇候选文献。请为每篇在心里打分，然后**只输出**评分最高的 {top_n} 篇，并生成中文总结：
+1. summary_zh：一句中文总结（20-40字），直接写结论和关键数字（死亡率、样本量、效应量等），不要写"本研究探讨了……"
+2. detail_zh：详细中文解读（120-180字），按以下三点组织：
+   - 研究设计与人群：RCT / 队列 / 病例对照 / 回顾性 / Meta 分析，样本量，纳入人群
+   - 干预或暴露与主要结局：做了什么、对照是什么、主要终点结果（附效应量与置信区间或 p 值，摘要给出时才写）
+   - 结论与局限：作者结论，以及摘要中可见的局限（单中心、样本量小、观察性设计等）
+
+硬性要求：
+- 只能使用摘要中出现的信息，摘要没写的内容不要补，缺失就写"摘要未提及"
+- 数字必须与摘要一致，不得四舍五入或换算单位
+- 不使用"显著改善"这类空话，要指出改善的具体指标和幅度
+
+**输出格式**（严格 JSON 数组，不要有其他文字，只输出 {top_n} 篇）：
+[
+  {{
+    "id": "文献ID",
+    "score": 相关性评分(1-10的整数),
+    "summary_zh": "一句中文总结",
+    "detail_zh": "详细中文解读"
+  }},
+  ...
+]
+
+候选文献：
+{clinical_text}
+"""
 
     return f"""你是一位 AI 研究领域的论文筛选助手。
 关注方向：{all_kw_str}
