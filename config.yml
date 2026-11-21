@@ -70,7 +70,7 @@ prompt_profile: clinical
 
 # ── 邮件与 LLM 配置 ─────────────────────────────────────────
 # 发件邮箱服务商（163 / gmail / qq）
-smtp_provider: "163"
+smtp_provider: "qq"
 
 # LLM 服务商（deepseek 国内访问快、便宜；也可用 zhipu / qwen / moonshot / openai）
 # 对应的 API Key 填到 GitHub Secrets 的 LLM_API_KEY
