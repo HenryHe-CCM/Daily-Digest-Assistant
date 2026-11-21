@@ -44,6 +44,14 @@ body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI
 .card-title a:hover { text-decoration: underline; }
 .card-byline { font-size: 11px; color: #999; }
 
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
 .summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
 .summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
 .summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
@@ -83,12 +91,12 @@ details summary:hover { background: #eef2ff; }
       <div class="pill">📄 PubMed <b>8</b> 篇</div>
       
       
-      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · high-flow nasal cannula · extracorporeal membrane oxygenation · ECMO · intensive care unit · critical illness · vasopressor · prone positioning · acute kidney injury · ventilator weaning · delirium</div>
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
     </div>
   </div>
 
   
-  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-19 至 2026-11-21 检索（关键词限定标题/摘要字段），命中 44 篇候选，再由模型按重症医学相关性评分筛选。</p>
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-19 至 2026-11-21 检索（关键词限定标题/摘要字段），命中 44 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
   
 
   <!-- 两栏并排 -->
@@ -131,10 +139,18 @@ details summary:hover { background: #eef2ff; }
                   <a href="https://pubmed.ncbi.nlm.nih.gov/43059105/" target="_blank">Gut microbiome-based interventions to prevent ICU-acquired infections: A systematic review and meta-analysis.</a>
                 </div>
                 <div class="card-byline">Townsend EC, Fisch SA, Yip NH, Freedberg DE</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">Gut microbes</span>
+                  
+                  <span class="badge-if">IF 17.7</span>
+                  
+                  <span class="badge-evidence">系统评价/Meta</span>
+                </div>
                 
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
-                  SDD与益生菌制剂均未降低ICU总死亡率，但SDD使肺炎风险下降约一半（RR 0.50），两者感染相关结局相近
+                  SDD与益生菌类制剂均未降低ICU总死亡率，但SDD使肺炎风险下降约一半（RR 0.50），两者对感染结局均有保护趋势
                 </div>
                 
                 <div class="card-links">
@@ -145,7 +161,7 @@ details summary:hover { background: #eef2ff; }
               
               <details>
                 <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>系统综述与Meta分析，检索PubMed 2000-2025年RCT，纳入成人ICU患者，比较选择性消化道去污（SDD）或生物制剂（益生菌/益生元/合生元）与标准治疗或安慰剂。共纳入9项SDD试验（19907例）和29项生物制剂试验（5483例），采用随机效应模型合并RR。结果显示总体死亡率：SDD RR=0.96（95%CI 0.88-1.05），生物制剂RR=0.93（95%CI 0.87-1.00），均未达统计学意义；SDD与ICU获得性全因感染风险降低相关（RR=0.76，95%CI 0.60-0.98），生物制剂RR=0.82（95%CI 0.64-1.05）；肺炎方面SDD RR=0.50（95%CI 0.26-0.96），益生元/合生元RR=0.70（95%CI 0.54-0.90）。作者指出缺乏两类干预直接比较的RCT，纳入研究异质性较大，尤其生物制剂试验。</div>
+                <div class="detail-body"><span class="detail-label">论文解读</span>系统综述与Meta分析，检索PubMed 2000-2025年RCT，纳入成人ICU患者，比较SDD或生物制剂（益生菌/益生元/合生元）与标准治疗或安慰剂。共9项SDD试验（19,907例）和29项生物制剂试验（5,483例）。总死亡率：SDD RR 0.96（95%CI 0.88-1.05），生物制剂RR 0.93（95%CI 0.87-1.00），均无统计学意义。ICU获得性全因感染：SDD RR 0.76（95%CI 0.60-0.98），生物制剂RR 0.82（95%CI 0.64-1.05）；肺炎：SDD RR 0.50（95%CI 0.26-0.96），益生元/合生元RR 0.70（95%CI 0.54-0.90）。作者指出无SDD与生物制剂直接对照的RCT，纳入研究异质性大，尤其生物制剂试验。</div>
               </details>
               
             </div>
@@ -179,10 +195,18 @@ details summary:hover { background: #eef2ff; }
                   <a href="https://pubmed.ncbi.nlm.nih.gov/43062006/" target="_blank">H-shaped sponge positioner prevents pressure injuries during prolonged prone ventilation in acute respiratory distress syndrome: a single-center, open-label, randomized controlled trial.</a>
                 </div>
                 <div class="card-byline">Wang Y, Liu J, Chen S, Tian S, Hu S</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">Medical gas research</span>
+                  
+                  <span class="badge-if">IF 4.0</span>
+                  
+                  <span class="badge-evidence">RCT</span>
+                </div>
                 
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
-                  中重度ARDS长时间俯卧位通气时，H型海绵定位器较软枕显著减少压力性损伤部位数与严重程度，并降低气道压和膀胱压
+                  中重度ARDS长时间俯卧位通气中，H型海绵定位器较软枕显著减少压力性损伤部位数与严重度，并降低气道压和膀胱压
                 </div>
                 
                 <div class="card-links">
@@ -193,7 +217,7 @@ details summary:hover { background: #eef2ff; }
               
               <details>
                 <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>单中心、开放标签RCT，纳入湘雅湘潭中心医院综合ICU 2023年5月至2024年5月中重度ARDS需长时间俯卧位通气（每次≥12小时）的患者60例，随机分为H型海绵定位器辅助俯卧位组与常规软枕支撑对照组，每组29例纳入分析。主要结局为压力性损伤累及解剖部位数及按2016版NPUAP/EPUAP分级标准的严重程度。结果显示压力性损伤部位数与总体发生率存在显著组×时间交互，干预组各轮次损伤部位持续少于对照组；平均气道压与膀胱压无显著组×时间交互，但随时间升高且干预组数值更低；氧合指数随时间改善，组间无统计学差异；干预组支持装置调整次数明显更少。局限为单中心、开放标签、样本量小（每组29例）。</div>
+                <div class="detail-body"><span class="detail-label">论文解读</span>单中心、开放标签RCT，纳入60例需延长时间俯卧位通气（每次≥12小时）的中重度ARDS患者，来自湘潭市中心医院综合ICU，每组29例可分析。干预组用H型海绵定位器辅助俯卧位，对照组用常规软枕支撑；主要终点为受压解剖部位数量及2016版NPUAP/EPUAP分期严重度。两组压力性损伤均随次数增加，但干预组各时点损伤部位数持续更少，部位数与总体发生率均存在显著组×时间交互；平均气道压与膀胱压无显著组×时间交互，但随时间升高且干预组显著更低；氧合指数随时间改善、组间无差异；干预组支持装置调整次数明显更少。作者结论为该装置廉价易用、适合资源有限环境，局限为单中心、样本量小（每组29例）。</div>
               </details>
               
             </div>
@@ -229,10 +253,18 @@ details summary:hover { background: #eef2ff; }
                   <a href="https://pubmed.ncbi.nlm.nih.gov/43063066/" target="_blank">Non-linear association between enteral nutrition initiation time and sepsis-associated delirium: A retrospective cohort study using the MIMIC-III database.</a>
                 </div>
                 <div class="card-byline">Zeng YY, Mo L, Hu T, Liu SB, Lu ZJ</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Medicine</span>
+                  
+                  <span class="badge-if">IF 3.0</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
                 
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
-                  脓毒症患者肠内营养启动越晚，脓毒症相关谵妄风险越高（T3 vs T1 OR 1.452），且呈非线性关系
+                  脓毒症患者中肠内营养启动越晚，脓毒症相关谵妄风险越高（第三分位OR 1.452），呈非线性关系，部分由升压药使用时长等介导
                 </div>
                 
                 <div class="card-links">
@@ -243,7 +275,61 @@ details summary:hover { background: #eef2ff; }
               
               <details>
                 <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>研究基于MIMIC-III数据库的回顾性队列，纳入ICU期间接受肠内营养的脓毒症患者2431例。以肠内营养启动时间（三分位分组）为主要暴露，脓毒症相关谵妄（SAD）为结局，采用多因素logistic回归、限制性立方样条及亚组交互分析。结果显示T2组OR=1.363（95%CI 1.004-1.857，P=0.048）、T3组OR=1.452（95%CI 1.06-1.994，P=0.021），趋势检验P=0.023；限制性立方样条提示非线性关系（P-overall=0.014，P-nonlinear=0.01）。分解分析提示血管活性药使用时长、住院/ICU时间、血小板及阴离子间隙部分解释了该关联。局限为观察性设计，作者声明不能确立因果，需前瞻性研究确定最佳启动时机。</div>
+                <div class="detail-body"><span class="detail-label">论文解读</span>基于MIMIC-III数据库的回顾性队列，纳入ICU期间接受肠内营养（EN）的脓毒症患者2431例。多变量logistic回归显示EN启动时间与脓毒症相关谵妄（SAD）相关：第二分位OR 1.363（95%CI 1.004-1.857，P=0.048），第三分位OR 1.452（95%CI 1.06-1.994，P=0.021），趋势检验P=0.023；限制性立方样条示非线性关系（总体P=0.014，非线性P=0.01）。亚组间无交互。探索性分解分析示升压药使用时长（P=0.014）、住院/ICU时间及前3天平均血小板和阴离子间隙部分解释了该关联。局限为观察性设计，不能确立因果。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">critical illness</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-20</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43063099/" target="_blank">Prognostic comparison of albumin-related inflammatory ratios in sepsis-induced coagulopathy: A retrospective cohort study based on the MIMIC-IV database.</a>
+                </div>
+                <div class="card-byline">Hu N, Wang S, Ma M, Lei M, He Q</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">Medicine</span>
+                  
+                  <span class="badge-if">IF 3.0</span>
+                  
+                  <span class="badge-evidence">对照研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症诱导凝血病患者中，RAR最高三分位与30天死亡风险增加52%相关（HR 1.52），RAR加入SOFA等评分可改善区分度与重分类
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43063099/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>基于MIMIC-IV数据库的回顾性队列，纳入2214例脓毒症诱导凝血病（SIC）患者，用首个24小时实验室值计算NAR、LAR、MAR、PAR、RAR五种白蛋白相关炎症比值，主要终点为30天全因死亡率。673例（30.4%）30天内死亡。RAR与NAR区分度相对较好，AUC约0.60。充分校正Cox模型中，RAR最高三分位较最低三分位死亡风险增加52%（HR 1.52，95%CI 1.21-1.89），NAR增加30%（HR 1.30，95%CI 1.04-1.63），NAR与死亡率呈显著非线性剂量反应（非线性P=0.011）。将RAR加入SOFA、SIC评分、OASIS和APS III后模型区分度与重分类均改善（IDI与NRI均P&lt;0.05）。局限为回顾性、区分度中等。</div>
               </details>
               
             </div>
@@ -277,10 +363,18 @@ details summary:hover { background: #eef2ff; }
                   <a href="https://pubmed.ncbi.nlm.nih.gov/43063111/" target="_blank">Machine learning for early identification of delirium in ICU patients with acute kidney injury.</a>
                 </div>
                 <div class="card-byline">Zhou H, Wang Y</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">Medicine</span>
+                  
+                  <span class="badge-if">IF 3.0</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
                 
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
-                  ICU合并AKI患者中，CatBoost预测谵妄的验证集AUC为0.742，糖尿病、肺炎、氯离子、红细胞和凝血酶原时间权重最高
+                  ICU合并AKI成人中，CatBoost预测谵妄验证集AUC 0.742，糖尿病、肺炎、氯、红细胞计数和凝血酶原时间为最重要预测因子
                 </div>
                 
                 <div class="card-links">
@@ -291,7 +385,7 @@ details summary:hover { background: #eef2ff; }
               
               <details>
                 <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计为回顾性队列，纳入ICU成年AKI患者，按70:30随机分为训练集与验证集，以ICU住院期间是否发生谵妄为标签；采用Boruta算法筛选变量后比较9种监督学习分类器。主要结局为验证集谵妄预测的ROC曲线下面积：CatBoost最优，AUC=0.742（95%CI 0.676-0.809），并给出校准曲线与决策曲线分析。SHAP分析显示糖尿病、肺炎、氯离子、红细胞计数和凝血酶原时间为最具影响力的预测因子。结论认为该模型具有中等区分度，可帮助识别高危患者并优先采取预防措施；局限为单中心回顾性设计、样本量有限，作者明确指出需外部队列验证后方可推广。</div>
+                <div class="detail-body"><span class="detail-label">论文解读</span>回顾性队列，纳入≥18岁ICU合并AKI患者，按70:30随机分为训练集与验证集，以ICU期间是否发生谵妄为标签。训练集用Boruta算法筛选确认变量后输入9种监督机器学习分类器，验证集以ROC-AUC、校准曲线和决策曲线评估，并用SHAP解释特征重要性。验证集中CatBoost判别最佳，AUC 0.742（95%CI 0.676-0.809）。SHAP显示糖尿病、肺炎、氯、红细胞计数和凝血酶原时间为最具影响的预测因子。作者认为该模型可帮助识别高危患者并优先采取预防措施，局限为单中心回顾性、需外部验证。</div>
               </details>
               
             </div>
@@ -323,10 +417,18 @@ details summary:hover { background: #eef2ff; }
                   <a href="https://pubmed.ncbi.nlm.nih.gov/43063354/" target="_blank">Earlier Application of Methylene Blue in Vasoplegic, Adrenergic Vasopressor-Resistant Patients is Associated with Better Clinical Outcomes. A Retrospective Analysis of 464 Patients.</a>
                 </div>
                 <div class="card-byline">Cohen D, Vaknin M, Suliman M, Segev AY, Segal G</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Shock (Augusta, Ga.)</span>
+                  
+                  <span class="badge-if">IF 2.8</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
                 
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
-                  血管麻痹性休克患者中，较早使用亚甲蓝与住院死亡率降低相关（校正HR 0.69），并减少CRRT需求
+                  血管麻痹性、肾上腺素能升压药抵抗患者中，较早使用亚甲蓝与住院死亡率降低相关（校正HR 0.69），并减少CVVH需求
                 </div>
                 
                 <div class="card-links">
@@ -337,7 +439,61 @@ details summary:hover { background: #eef2ff; }
               
               <details>
                 <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>单中心回顾性研究，纳入ICU中发生血管麻痹并接受亚甲蓝（MB）治疗的464例患者（综合ICU 183例、心胸外科ICU 281例），自入ICU至用药中位时间11.2小时。按用药早晚比较结局：早期组ICU死亡率30% vs 52%（P&lt;0.001）、住院死亡率41% vs 59%（P&lt;0.001）、1年死亡率46% vs 62%（P&lt;0.001）、需CVVH比例33% vs 53%（P&lt;0.001）。全队列生存分析中，早期用药与住院死亡风险降低相关（单因素HR=0.64，95%CI 0.47-0.86，P=0.003；多因素校正后HR=0.69，95%CI 0.51-0.94，P=0.018），但按ICU分层后关联减弱。局限为单中心回顾性设计，作者认为需前瞻性研究验证是否应将早期MB纳入难治性血管麻痹方案。</div>
+                <div class="detail-body"><span class="detail-label">论文解读</span>单中心回顾性研究，纳入464例ICU血管麻痹并接受亚甲蓝（MB）治疗的患者，其中综合ICU 183例（39%）、心胸外科ICU 281例（61%），自入ICU至用药中位时间11.2小时。较早给药组ICU死亡率30% vs 52%（p&lt;0.001）、住院死亡率41% vs 59%、1年死亡率46% vs 62%、需连续静脉-静脉血液滤过33% vs 53%（均p&lt;0.001）。全队列生存分析中较早给药与住院死亡率降低相关（未校正HR 0.64，95%CI 0.47-0.86，p=0.003；多变量校正后HR 0.69，95%CI 0.51-0.94，p=0.018），但按ICU分层分析后关联减弱。局限为回顾性、单中心、存在指征混杂。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-20</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43061788/" target="_blank">Aligning Care in Surgical Sepsis: Palliative Consultation and Treatment Intensity in Older Surgical ICU Adults.</a>
+                </div>
+                <div class="card-byline">Bragg F, Heffernan IM, Stephen AH</div>
+                <div class="card-meta">
+                  <span class="rank-badge">7</span>
+                  <span class="card-journal">Journal of palliative care</span>
+                  
+                  <span class="badge-if">IF 2.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  老年外科脓毒症ICU患者中仅15.9%接受姑息治疗会诊，会诊与更高机械通气率（OR 2.14）和死亡率（OR 4.90）相关，但未增加DNR转变
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43061788/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>回顾性队列，纳入1380例≥65岁、因外科脓毒症需有创操作的危重外科患者，其中220例（15.9%）接受姑息治疗（PC）会诊，研究期间会诊率显著上升（R2=0.627，p=0.004）。PC组基线合并症更少但30天死亡率更高（59.1% vs 21.6%，p&lt;0.001）；PC组尿路感染（9% vs 17%）、菌血症（9% vs 16%）、额外抗生素使用（82% vs 89%）及后续手术（55% vs 67%）比例更低，但机械通气比例更高（68% vs 45%，p&lt;0.001）。PC会诊未增加住院期间DNR状态。多变量分析示PC与更高机械通气几率（OR 2.14，95%CI 1.45-3.16）和死亡率（OR 4.90，95%CI 3.25-7.43）相关。局限为回顾性、会诊存在选择偏倚。</div>
               </details>
               
             </div>
@@ -371,10 +527,18 @@ details summary:hover { background: #eef2ff; }
                   <a href="https://pubmed.ncbi.nlm.nih.gov/43062038/" target="_blank">Delirium prevalence and practices across intensive care units in Singapore: a point prevalence survey.</a>
                 </div>
                 <div class="card-byline">Tay EK, Chu Z, Venkatesan K, Ng L, Tien JC</div>
+                <div class="card-meta">
+                  <span class="rank-badge">8</span>
+                  <span class="card-journal">Singapore medical journal</span>
+                  
+                  <span class="badge-if">IF 1.8</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
                 
                 <div class="summary">
                   <span class="label">💡 一句话总结</span>
-                  新加坡ICU谵妄点患病率为34.8%（筛查阳性32/92），成人ICU总体遵循PADIS建议但非药物干预不足
+                  新加坡ICU谵妄点患病率调查：92例受评估者中34.8%筛查阳性，成人ICU基本遵循PADIS建议但非药物整体照护不足
                 </div>
                 
                 <div class="card-links">
@@ -385,97 +549,7 @@ details summary:hover { background: #eef2ff; }
               
               <details>
                 <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>2024年3月13日世界谵妄关注日开展的多中心点患病率调查，覆盖新加坡公共医疗机构12个成人ICU和2个儿科ICU（分别占66%和100%），由ICU负责人填写问卷，收集谵妄患病率与管理实践并与国际指南比较。143例ICU患者中92例（81.4%）接受谵妄评估，32例（34.8%）筛查阳性。成人ICU在限制苯二氮䓬类使用、常规谵妄评估、疼痛与镇静管理方案方面基本符合PADIS推荐，但整体性非药物照护欠缺；儿科ICU对PANDEM依从性较好，但谵妄评估与降噪实践仍有不足。最常报告的障碍为人力短缺、时间限制与教育缺口。局限为单日横断面调查、依赖自报问卷，作者建议通过质量改进项目弥补非药物干预与教育资源缺口。</div>
-              </details>
-              
-            </div>
-          
-        </td>
-
-        
-      </tr>
-      
-      <tr class="card-row">
-        <!-- 左栏：arXiv -->
-        <td>
-          
-            
-            <div class="card">
-              <div class="card-inner">
-                <div class="card-top">
-                  <div class="card-tags">
-                    
-                    <span class="tag">sepsis</span>
-                    
-                    <span class="tag">critical illness</span>
-                    
-                    
-                  </div>
-                  <span class="card-date">2026-11-20</span>
-                </div>
-                <div class="card-title">
-                  <a href="https://pubmed.ncbi.nlm.nih.gov/43063099/" target="_blank">Prognostic comparison of albumin-related inflammatory ratios in sepsis-induced coagulopathy: A retrospective cohort study based on the MIMIC-IV database.</a>
-                </div>
-                <div class="card-byline">Hu N, Wang S, Ma M, Lei M, He Q</div>
-                
-                <div class="summary">
-                  <span class="label">💡 一句话总结</span>
-                  脓毒症相关凝血病患者中，RAR最高三分位与30天死亡风险增加52%相关（HR 1.52），NAR增加30%
-                </div>
-                
-                <div class="card-links">
-                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43063099/" target="_blank">PubMed</a>
-                  
-                </div>
-              </div>
-              
-              <details>
-                <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>基于MIMIC-IV数据库的回顾性队列，纳入2214例脓毒症诱导凝血病（SIC）患者，用入ICU首个24小时实验室值计算5种白蛋白相关炎症比值（NAR、LAR、MAR、PAR、RAR），主要结局为30天全因死亡。共673例（30.4%）在30天内死亡。RAR与NAR区分度相对较好，AUC约0.60。完全校正Cox模型中，RAR最高三分位（T3 vs T1）与死亡风险增加52%相关（HR=1.52，95%CI 1.21-1.89），NAR最高三分位增加30%（HR=1.30，95%CI 1.04-1.63）；NAR与死亡率呈显著非线性剂量反应（P=0.011）。将RAR加入SOFA、SIC评分、OASIS和APS III后模型区分度与重分类均改善（IDI与NRI P均&lt;0.05）。局限为回顾性、单数据库、AUC仅约0.60，区分度有限。</div>
-              </details>
-              
-            </div>
-          
-        </td>
-
-        
-      </tr>
-      
-      <tr class="card-row">
-        <!-- 左栏：arXiv -->
-        <td>
-          
-            
-            <div class="card">
-              <div class="card-inner">
-                <div class="card-top">
-                  <div class="card-tags">
-                    
-                    <span class="tag">intensive care unit</span>
-                    
-                    
-                  </div>
-                  <span class="card-date">2026-11-20</span>
-                </div>
-                <div class="card-title">
-                  <a href="https://pubmed.ncbi.nlm.nih.gov/43063104/" target="_blank">An interpretable AutoML framework for predicting carbapenem resistance and ICU outcomes in patients with Pseudomonas aeruginosa-positive cultures: A single-center retrospective cohort study.</a>
-                </div>
-                <div class="card-byline">Lv X, Ren Q, Zhu L, Chen K, Wang J</div>
-                
-                <div class="summary">
-                  <span class="label">💡 一句话总结</span>
-                  ICU铜绿假单胞菌培养阳性患者中，随机森林预测院内死亡的AUC达0.856，但碳青霉烯耐药预测区分度仅0.581-0.656
-                </div>
-                
-                <div class="card-links">
-                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43063104/" target="_blank">PubMed</a>
-                  
-                </div>
-              </div>
-              
-              <details>
-                <summary>📋 详细解读</summary>
-                <div class="detail-body"><span class="detail-label">论文解读</span>单中心回顾性队列，纳入2018-2023年847例ICU铜绿假单胞菌培养阳性成人，设定入ICU后48小时为固定索引时间，仅使用此前可得信息。采用患者分组、时间分块的5折外部交叉验证评估9种分类器与8种回归器，预处理与特征选择均在外层训练折内拟合，分类阈值由内部折外预测设定以目标敏感度0.80。结果显示：预测索引后首个分离株碳青霉烯耐药以logistic回归AUC最高（0.581，95%CI 0.540-0.619）；预测末次分离株耐药（AUC 0.656，95%CI 0.614-0.696）及院内死亡（AUC 0.856，95%CI 0.830-0.880）以随机森林最优，对应敏感度/特异度分别为0.794/0.409和0.785/0.753。ICU住院时长以stacking回归RMSE最低（46.126天，R²=0.711）。局限为单中心、内部验证，耐药结局区分度有限，需外部队列验证。</div>
+                <div class="detail-body"><span class="detail-label">论文解读</span>2024年3月13日世界谵妄宣传日开展的多中心点患病率调查，覆盖新加坡公共医疗机构66%的成人ICU和100%的儿科ICU，共收到12个成人及2个儿科ICU负责人问卷。143例ICU患者中92例（81.4%）接受谵妄评估，32例（34.8%）筛查阳性。成人ICU总体遵循PADIS建议，包括限制苯二氮䓬类、常规谵妄评估、疼痛与镇静管理方案，但整体非药物照护欠缺；儿科ICU对PANDEM依从性较好，但谵妄评估与降噪实践仍有不足。报告的主要障碍为人力短缺、时间限制和教育缺口。局限为单日横断面调查、样本量有限。</div>
               </details>
               
             </div>
@@ -487,6 +561,10 @@ details summary:hover { background: #eef2ff; }
       
     
   </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
 
   <!-- Footer -->
   <div class="footer">
