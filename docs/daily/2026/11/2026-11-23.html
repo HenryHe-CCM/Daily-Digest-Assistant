@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日推送 · 2026年11月23日</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI', sans-serif; padding: 30px 16px; }
+
+.email-wrap { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.10); }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 28px 28px 20px; color: #fff; }
+.header .eyebrow { font-size: 11px; letter-spacing: 3px; color: #7ecfff; text-transform: uppercase; margin-bottom: 8px; }
+.header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.header .meta { font-size: 12px; color: #a0b8cc; margin-bottom: 14px; }
+.pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 13px; font-size: 11px; color: #d0e8ff; }
+.pill b { color: #7ecfff; }
+
+/* ── 两栏布局 ── */
+.content-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.col-header-row th { width: 50%; text-align: left; padding: 14px 14px 10px; background: #fff; border-bottom: 1px solid #e8eaef; }
+.col-header-arxiv { color: #3b5bdb; font-size: 13px; font-weight: 700; border-bottom: 2px solid #3b5bdb; display: inline-block; padding-bottom: 2px; }
+.col-header-xhs { color: #FF2442; font-size: 13px; font-weight: 700; border-bottom: 2px solid #FF2442; display: inline-block; padding-bottom: 2px; }
+
+/* 卡片行 */
+.card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
+.card-row td:first-child { border-right: 1px solid #e8eaef; }
+.rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+
+/* ── Cards ── */
+.card { border: 1px solid #e8eaef; border-radius: 8px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+.card-inner { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #555; }
+.card-date { font-size: 10px; color: #aaa; white-space: nowrap; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.45; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
+.card-byline { font-size: 11px; color: #999; }
+
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
+.summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
+.summary-xhs .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #FF2442; display: block; margin-bottom: 2px; }
+
+.card-links { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; text-decoration: none; }
+.btn-arxiv { background: #b31b1b; color: #fff; }
+.btn-pdf { background: #1a73e8; color: #fff; }
+.btn-xhs { background: #FF2442; color: #fff; }
+
+/* ── details/summary 展开收起 ── */
+details { border-top: 1px solid #eef0f8; background: #fafbff; }
+details summary { display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; list-style: none; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▶"; font-size: 9px; }
+details[open] summary::before { content: "▼"; }
+details summary:hover { background: #eef2ff; }
+.detail-body { padding: 8px 12px 12px; font-size: 11px; color: #444; line-height: 1.7; white-space: pre-wrap; border-top: 1px solid #eef0f8; }
+.detail-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b5bdb; display: block; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.footer { background: #f8f9ff; border-top: 1px solid #eaecf0; padding: 16px 24px; text-align: center; font-size: 11px; color: #aaa; }
+.footer a { color: #3b5bdb; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="email-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">📬 Daily Digest</div>
+    <h1>今日推送</h1>
+    <div class="meta">2026年11月23日 · 星期一</div>
+    <div class="pills">
+      
+      <div class="pill">📄 PubMed <b>8</b> 篇</div>
+      
+      
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
+    </div>
+  </div>
+
+  
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-21 至 2026-11-23 检索（关键词限定标题/摘要字段），命中 48 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
+  
+
+  <!-- 两栏并排 -->
+  <table class="content-table single-col">
+    <!-- 表头 -->
+    <tr class="col-header-row">
+      <th>
+        &nbsp;&nbsp;<span class="col-header-arxiv">📄 PubMed 论文</span>
+        
+      </th>
+      
+    </tr>
+
+    
+      
+    
+
+    
+    
+
+    
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    <span class="tag">critical illness</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-21</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43067651/" target="_blank">Effect of critical illness and mechanical ventilation on energy and substrate metabolism in patients with liver cirrhosis: an indirect calorimeter-based cross-sectional study.</a>
+                </div>
+                <div class="card-byline">Shasthry V, Benjamin J, Maiwall R, Agrawal P, Kumar G</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">Hepatology international</span>
+                  
+                  <span class="badge-if">IF 7.1</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  肝硬化危重机械通气患者呼吸商降至0.74、碳水氧化仅13.3%，呈进行性饥饿表型而总能量消耗未升高
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43067651/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/4050641?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：前瞻性观察研究，63例健康对照、68例非危重肝硬化、70例危重机械通气肝硬化患者，采用间接测热法（Quark RMR）。暴露与主要结局：比较静息能量消耗（REE）、呼吸商（RQ）与底物氧化。三组RQ依次为0.86、0.80、0.74（p=0.003），碳水氧化60.3%、30.3%、13.3%（p&lt;0.001），脂肪氧化27%、59.8%、72.7%（p&lt;0.001），REE无差异（1446、1485、1415 kcal/day，p=0.32）；危重组低代谢比例45.6% vs 22.2%和30.3%（p=0.015），IL-6、CRP及非酯化脂肪酸更高。结论与局限：作者认为底物利用改变是肝硬化尤其是危重期的主要代谢异常；局限为单中心、横断面设计，未报告临床结局。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-21</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43067406/" target="_blank">Machine learning-based prediction of mortality at candidemia diagnosis: development and external validation across multicentre cohorts.</a>
+                </div>
+                <div class="card-byline">Gras E, Gallardo-Pizarro A, Teijón-Lumbreras C, Sedik S, Martinez-Urrea A</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">Clinical microbiology and infection : the official publication of the European Society of Clinical Microbiology and Infectious Diseases</span>
+                  
+                  <span class="badge-if">IF 5.9</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  念珠菌血症诊断时机器学习模型预测30天死亡，推导队列AUC 0.749，外部验证降至0.668且需再校准
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43067406/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：推导队列为西班牙三项前瞻性队列汇总的1,640例成人念珠菌血症患者（476例，29%于30天内死亡），外部验证采用欧洲Candida III国际队列632例（228例，36%死亡）。模型与主要结局：比较7种监督算法后选用XGBoost嵌套交叉验证，最终保留9个预测因子（年龄、肿瘤、慢性肾病、慢性肝病、近期手术、脓毒性休克、ICU环境、推测导管相关来源、糖皮质激素暴露）。推导AUC-ROC 0.749（95%CI 0.723–0.775）、AUC-PR 0.562、Brier 0.171；验证队列AUC-ROC 0.668（95%CI 0.628–0.710）、AUC-PR 0.515、Brier 0.218，逻辑再校准后Brier降至0.213而区分度不变。结论与局限：作者认为可用于早期风险分层，但外部验证区分度下降，临床实施前需本地验证。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2027-01-01</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43068852/" target="_blank">Effects of Iloprost on Nitric Oxide Biomarkers in Patients With Septic Shock and Severe Endotheliopathy.</a>
+                </div>
+                <div class="card-byline">Mortensen KM, Itenov TS, Stensballe J, Johansson PI, Perner A</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Acta anaesthesiologica Scandinavica</span>
+                  
+                  <span class="badge-if">IF 2.0</span>
+                  
+                  <span class="badge-evidence">RCT</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒性休克伴严重内皮病患者中，伊洛前列素72小时输注未改变ADMA、SDMA、精氨酸及高精氨酸血浆浓度
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43068852/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：COMBAT-SHINE随机双盲试验的预设亚组分析，纳入274例ICU脓毒性休克且可溶性血栓调节蛋白&gt;10 ng/mL的成人。干预与主要结局：随机接受伊洛前列素1 ng/kg/min或安慰剂持续72小时，于0、24、48、72小时测ADMA、SDMA、精氨酸、高精氨酸。结果显示伊洛前列素组与安慰剂组ADMA估计均数差-4%（95%CI -13%～6%，p=0.4）、SDMA -2%（95%CI -14%～10%，p=0.7）、精氨酸9%（95%CI -6%～27%，p=0.2）、高精氨酸17%（95%CI -3%～42%，p=0.10），各时段变化组间均无差异（p&gt;0.3）。结论与局限：作者结论为该剂量伊洛前列素不影响上述NO生物标志物；所有分析为探索性，样本来自单一试验亚组。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43070045/" target="_blank">Impact of a sepsis clinical decision support system and workflow on sepsis-associated mortality or hospice discharge: A multihospital quasi-experimental study from 2018 to 2024.</a>
+                </div>
+                <div class="card-byline">Chang C, Hoeflich CC, Gerac J, Ulrich J, Gainey C</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">Journal of hospital medicine</span>
+                  
+                  <span class="badge-if">IF 1.5</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症临床决策支持工具上线后，脓毒症住院死亡/临终出院率由18.8%降至16.3%，脓毒性休克由40.0%降至36.4%
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43070045/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：回顾性准实验研究，纳入10家医院2018–2024年631,620例成人急性住院，其中脓毒症50,911例（8.1%）。干预与主要结局：脓毒症导航工具（SNT）整合脓毒症指标、实时计时器与医嘱套餐；主要终点为全因住院死亡或临终出院。实施后脓毒症死亡/临终出院率从18.8%降至16.3%（p&lt;0.001），脓毒性休克从40.0%降至36.4%（p&lt;0.001）；校正后脓毒症aOR=0.73（95%CI 0.69–0.77），脓毒性休克aOR=0.73（95%CI 0.68–0.79）；ICU入住率、医嘱套餐使用、住院时长、血培养与抗生素给药时机亦改善。结论与局限：作者认为SNT与脓毒症结局及流程指标改善相关；局限为回顾性准实验设计、无法排除同期混杂因素。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-22</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43068574/" target="_blank">Neurosurgical intervention and ICU mortality in mechanically ventilated patients with acute brain injury: A post hoc analysis of a multicenter observational study.</a>
+                </div>
+                <div class="card-byline">Loggini A, Battaglini D, Corriero S, Cinotti R, Asehnoune K</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">Neuro-Chirurgie</span>
+                  
+                  <span class="badge-if">IF 1.5</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  机械通气急性脑损伤患者中，神经外科干预与保守治疗ICU死亡率无独立关联（IPTW OR 1.12）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43068574/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：ENIO多中心前瞻性观察研究（NCT03400904，18国73个ICU）的事后分析，纳入1,510例插管前GCS≤12、有创机械通气≥24小时的成人神经重症患者。干预与主要结局：暴露为神经外科干预（609例，40.3%）对比保守治疗（901例，59.7%），主要终点ICU死亡。粗死亡率7.1% vs 6.0%（p=0.38）；IPTW后（1,460例）神经外科干预与ICU死亡无关联（OR 1.12，95%CI 0.73–1.70，p=0.60），多因素回归（OR 1.13，95%CI 0.72–1.78）、混合效应模型（OR 1.31，95%CI 0.77–2.22）及颅内出血亚组（OR 0.86，95%CI 0.44–1.71）结果一致。结论与局限：校正适应证混杂后手术未独立影响ICU死亡；局限为事后分析、未评估长期功能结局。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">extracorporeal membrane oxygenation</span>
+                    
+                    <span class="tag">ECMO</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-21</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43066649/" target="_blank">Risk factors for intracardiac thrombus during peripheral venoarterial and venovenoarterial extracorporeal membrane oxygenation support.</a>
+                </div>
+                <div class="card-byline">Jung EY, Joo S, Park Y, Kim AR, Hong JA</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Perfusion</span>
+                  
+                  <span class="badge-if">IF 1.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  外周VA/VA-V ECMO中8.6%发生心内血栓，系统肝素化使风险降低80%（aHR 0.20），LVEF&lt;35%风险陡增
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43066649/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：单中心回顾性队列，638例成人共671次外周V-A/V-AV ECMO（2021–2025年）。暴露与主要结局：以无心内血栓撤除ECMO为竞争事件行病因特异性Cox回归，58次（8.6%）检出心内血栓（ICT）。多因素分析中LVEF每升高1%的aHR 0.98（95%CI 0.96–1.00，p=0.028），第1天脉压每升高1 mmHg的aHR 0.98（95%CI 0.96–1.00，p=0.034），系统肝素化aHR 0.20（95%CI 0.11–0.39，p&lt;0.001）；LVEF与ICT呈非线性关系（p=0.033），约35%以上风险低、以下急剧升高。手术与非手术治疗短期结局无差异。结论与局限：作者建议结合LVEF、初始脉压及抗凝状态识别需密切影像监测者；局限为单中心回顾性设计。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-21</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43066603/" target="_blank">Association Between Daily Fluid Balance Trajectories and Dynamic Organ Failure Resolution (SOFA-2) in Sepsis: A Latent Class Growth Analysis of 16 262 Patients.</a>
+                </div>
+                <div class="card-byline">Zhai Z, Jiang X, Gu W</div>
+                <div class="card-meta">
+                  <span class="rank-badge">7</span>
+                  <span class="card-journal">Journal of intensive care medicine</span>
+                  
+                  <span class="badge-if">IF 3.1</span>
+                  
+                  <span class="badge-evidence">综述</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症去复苏期液体平衡分三型，持续液体蓄积型28天死亡风险增高（aOR 1.27），SOFA-2器官恢复延迟
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43066603/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：MIMIC-IV v3.1回顾性队列，16,262例ICU存活≥72小时的成人脓毒症患者，对第3–7天每日净液体平衡做基于组的轨迹建模。干预/暴露与主要结局：识别出三型——快速恢复型85.4%（n=13,892，28天死亡率20.8%）、延迟反应型8.3%（n=1,354）、持续失败型6.3%（n=1,016）。校正基线严重度、袢利尿剂累积剂量及RRT后，延迟反应型aOR 1.30（95%CI 1.14–1.49，P&lt;0.001）、持续失败型aOR 1.27（95%CI 1.09–1.48，P=0.002）均与28天死亡升高相关；快速恢复型SOFA-2由第3天4.24降至第7天1.18，持续失败型仅降至2.17。结论与局限：作者认为轨迹可作为内皮完整性、排泄能力及去复苏反应性的临床标志；局限为回顾性观察，不能证明因果。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-21</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43066608/" target="_blank">Vancomycin Clearance During CVVHDF With an oXiris Membrane: Pharmacokinetic Evidence of Adsorptive Drug Removal.</a>
+                </div>
+                <div class="card-byline">Ioannidis K, Nikolaou K, O&#39;Jeanson A, Katsouda E, Markesinis D</div>
+                <div class="card-meta">
+                  <span class="rank-badge">8</span>
+                  <span class="card-journal">Blood purification</span>
+                  
+                  <span class="badge-if">IF 2.4</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒性休克患者oXiris膜CVVHDF期间万古霉素滤器前后浓度差由13.5%降至3.1%，提示时间依赖性吸附清除
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43066608/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：单例in vivo药代/药效评估，对象为无尿、严重低白蛋白血症的脓毒性休克患者，使用oXiris膜行CVVHDF，于第7剂万古霉素、膜已使用18小时时连续采集滤器前、滤器后及废液样本。暴露与主要结局：滤器前后万古霉素浓度降幅随时间递减（2小时约13.5%、4小时13.3%、7小时3.1%），与时间依赖性吸附相符；平均废液饱和系数0.62，预稀释一阶校正后CVVHDF清除率约1.25 L/h，总清除率估计5.7 L/h，模型推算AUC24为526 mg·h/L、AUC24/MIC为1053。结论与局限：作者认为存在混合性体外清除，吸附无法与弥散、对流区分，换膜后应按AUC治疗药物监测调整剂量；局限为仅单例、无法定量吸附。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+    
+  </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    由 <strong>arxiv-daily</strong> 自动生成 · 每天 12:00 推送<br>
+    
+    <a href="https://HenryHe-CCM.github.io/Daily-Digest-Assistant/archive.html" target="_blank">📚 查看历史归档</a> ·
+    
+    <a href="https://github.com/yzbcs/Daily-Digest-Assistant">GitHub</a>
+  </div>
+
+</div>
+</body>
+</html>
