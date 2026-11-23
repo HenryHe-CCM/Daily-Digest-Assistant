@@ -80,7 +80,26 @@ def filter_and_summarize_papers(
         raise RuntimeError(f"模型调用失败，已中止本次推送：{last_error}") from last_error
     results = _parse_json_response(raw)
     print(f"      [LLM] 论文响应字符数={len(raw)}, 解析结果数={len(results)}", flush=True)
+
     if not results:
+        # 格式漂移是间歇性的：先带着纠正提示重试一次，别因为一次抽风就整天空转
+        print("      [LLM] 首次输出无法解析，附格式纠正提示重试一次", flush=True)
+        _log_raw_sample(raw, "首次")
+        retry_prompt = (
+            prompt
+            + "\n\n【重要】你上一次的输出无法被 JSON 解析。这一次只输出 JSON 数组本身："
+              "不要任何解释文字、不要 Markdown 代码块围栏；"
+              "字符串内部不要出现真实换行（需要分段请在字符串里写 \\n 两个字符）。"
+        )
+        try:
+            raw = _call_llm(retry_prompt, llm_provider, api_key, custom_llm)
+            results = _parse_json_response(raw)
+            print(f"      [LLM] 重试响应字符数={len(raw)}, 解析结果数={len(results)}", flush=True)
+        except Exception as exc:
+            print(f"      [LLM] 重试调用失败：{type(exc).__name__}: {exc}", flush=True)
+
+    if not results:
+        _log_raw_sample(raw, "重试后")
         raise RuntimeError("模型返回的内容无法解析为 JSON，已中止本次推送（避免发送空摘要邮件）")
 
     # 建立 id → paper 映射
@@ -463,19 +482,152 @@ def _call_openai_compatible(prompt: str, api_key: str, base_url: str | None, mod
 
 # ── JSON 解析 ──────────────────────────────────────────────────
 
+def _escape_control_chars(text: str) -> str:
+    """把 JSON 字符串内部的裸换行/制表符转义。
+
+    模型写多段 detail_zh 时经常在字符串里直接换行，json.loads 会报
+    "Invalid control character"——这是线上最常见的一种坏法。
+    """
+    out: list[str] = []
+    in_string = False
+    escaped = False
+    for ch in text:
+        if in_string:
+            if escaped:
+                out.append(ch)
+                escaped = False
+            elif ch == "\\":
+                out.append(ch)
+                escaped = True
+            elif ch == '"':
+                out.append(ch)
+                in_string = False
+            elif ch == "\n":
+                out.append("\\n")
+            elif ch == "\r":
+                out.append("\\r")
+            elif ch == "\t":
+                out.append("\\t")
+            else:
+                out.append(ch)
+            continue
+        if ch == '"':
+            in_string = True
+        out.append(ch)
+    return "".join(out)
+
+
+def _extract_array(text: str) -> str | None:
+    """括号配对取出第一个 JSON 数组；未闭合时返回从起点到末尾的残片。"""
+    start = text.find("[")
+    if start == -1:
+        return None
+    depth = 0
+    in_string = False
+    escaped = False
+    for index in range(start, len(text)):
+        ch = text[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth -= 1
+            if depth == 0:
+                return text[start:index + 1]
+    return text[start:]
+
+
+def _close_truncated_array(text: str) -> str | None:
+    """输出被截断时，砍到最后一个完整对象并补上 "]" 。"""
+    depth = 0
+    in_string = False
+    escaped = False
+    last_complete = -1
+    for index, ch in enumerate(text):
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                last_complete = index
+    if last_complete <= 0:
+        return None
+    return text[:last_complete + 1] + "]"
+
+
+def _log_raw_sample(raw: str, tag: str) -> None:
+    """解析失败时把原文头尾打进 CI 日志，否则无法判断坏在哪。"""
+    safe = (raw or "").replace("\n", "\\n")
+    head = safe[:400]
+    tail = safe[-300:] if len(safe) > 400 else ""
+    print(f"      [LLM] {tag}原文采样（共 {len(raw or '')} 字符）：{head}", flush=True)
+    if tail:
+        print(f"      [LLM] {tag}原文结尾：...{tail}", flush=True)
+
+
 def _parse_json_response(raw: str) -> list[dict]:
-    """从 LLM 响应中提取 JSON 数组，容错处理代码块包裹。"""
+    """从 LLM 响应中提取 JSON 数组，多层容错。
+
+    线上实际遇到过的坏法：代码块围栏、前后夹带说明文字、字符串内裸换行、
+    结尾多余逗号、输出被截断。逐层退让，全部失败才返回空列表。
+    """
     import re
-    # 去掉 ```json ... ``` 包裹
-    raw = re.sub(r"```(?:json)?\s*", "", raw).strip().rstrip("`").strip()
+
+    if not raw or not raw.strip():
+        return []
+
+    cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
+
     try:
-        return json.loads(raw)
+        data = json.loads(cleaned)
+        if isinstance(data, dict):
+            for value in data.values():      # 兼容 {"papers": [...]} 包一层的写法
+                if isinstance(value, list):
+                    data = value
+                    break
+        if isinstance(data, list) and all(isinstance(i, dict) for i in data):
+            return data
     except json.JSONDecodeError:
-        # 尝试提取第一个 [ ... ] 块
-        match = re.search(r"\[.*\]", raw, re.DOTALL)
-        if match:
-            try:
-                return json.loads(match.group())
-            except Exception:
-                pass
+        pass
+
+    array_text = _extract_array(cleaned)
+    if not array_text:
+        return []
+
+    escaped = _escape_control_chars(array_text)
+    attempts = [
+        array_text,
+        escaped,
+        re.sub(r",\s*([\]}])", r"\1", escaped),
+    ]
+    closed = _close_truncated_array(escaped)
+    if closed:
+        attempts.append(re.sub(r",\s*([\]}])", r"\1", closed))
+
+    for attempt in attempts:
+        try:
+            data = json.loads(attempt)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, list) and data:
+            return [item for item in data if isinstance(item, dict)]
     return []
