@@ -2,7 +2,7 @@ name: Daily Paper Digest
 
 on:
   schedule:
-    - cron: "0 4 * * *"    # UTC 04:00 = 北京时间 12:00，每天（小红书不休息）
+    -  cron: "31 0 * * *"   # UTC 00:31 = 北京时间 08:31，每天）
   workflow_dispatch:        # 支持手动触发（测试用）
 
 jobs:
@@ -87,7 +87,7 @@ jobs:
           preview_path = 'preview.html'
           if os.path.exists(preview_path):
               content = open(preview_path, 'r', encoding='utf-8').read()
-              pm = re.search(r'📄 (?:arXiv|Semantic Scholar) <b>(\d+)</b> 篇', content)
+              pm = re.search(r'📄 (?:arXiv|Semantic Scholar|PubMed) <b>(\d+)</b> 篇', content)
               nm = re.search(r'📕 小红书 <b>(\d+)</b> 条', content)
               if pm: papers_count = int(pm.group(1))
               if nm: notes_count = int(nm.group(1))
