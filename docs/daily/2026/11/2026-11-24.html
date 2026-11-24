@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日推送 · 2026年11月24日</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI', sans-serif; padding: 30px 16px; }
+
+.email-wrap { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.10); }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 28px 28px 20px; color: #fff; }
+.header .eyebrow { font-size: 11px; letter-spacing: 3px; color: #7ecfff; text-transform: uppercase; margin-bottom: 8px; }
+.header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.header .meta { font-size: 12px; color: #a0b8cc; margin-bottom: 14px; }
+.pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 13px; font-size: 11px; color: #d0e8ff; }
+.pill b { color: #7ecfff; }
+
+/* ── 两栏布局 ── */
+.content-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.col-header-row th { width: 50%; text-align: left; padding: 14px 14px 10px; background: #fff; border-bottom: 1px solid #e8eaef; }
+.col-header-arxiv { color: #3b5bdb; font-size: 13px; font-weight: 700; border-bottom: 2px solid #3b5bdb; display: inline-block; padding-bottom: 2px; }
+.col-header-xhs { color: #FF2442; font-size: 13px; font-weight: 700; border-bottom: 2px solid #FF2442; display: inline-block; padding-bottom: 2px; }
+
+/* 卡片行 */
+.card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
+.card-row td:first-child { border-right: 1px solid #e8eaef; }
+.rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+
+/* ── Cards ── */
+.card { border: 1px solid #e8eaef; border-radius: 8px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+.card-inner { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #555; }
+.card-date { font-size: 10px; color: #aaa; white-space: nowrap; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.45; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
+.card-byline { font-size: 11px; color: #999; }
+
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
+.summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
+.summary-xhs .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #FF2442; display: block; margin-bottom: 2px; }
+
+.card-links { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; text-decoration: none; }
+.btn-arxiv { background: #b31b1b; color: #fff; }
+.btn-pdf { background: #1a73e8; color: #fff; }
+.btn-xhs { background: #FF2442; color: #fff; }
+
+/* ── details/summary 展开收起 ── */
+details { border-top: 1px solid #eef0f8; background: #fafbff; }
+details summary { display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; list-style: none; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▶"; font-size: 9px; }
+details[open] summary::before { content: "▼"; }
+details summary:hover { background: #eef2ff; }
+.detail-body { padding: 8px 12px 12px; font-size: 11px; color: #444; line-height: 1.7; white-space: pre-wrap; border-top: 1px solid #eef0f8; }
+.detail-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b5bdb; display: block; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.footer { background: #f8f9ff; border-top: 1px solid #eaecf0; padding: 16px 24px; text-align: center; font-size: 11px; color: #aaa; }
+.footer a { color: #3b5bdb; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="email-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">📬 Daily Digest</div>
+    <h1>今日推送</h1>
+    <div class="meta">2026年11月24日 · 星期二</div>
+    <div class="pills">
+      
+      <div class="pill">📄 PubMed <b>8</b> 篇</div>
+      
+      
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
+    </div>
+  </div>
+
+  
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-22 至 2026-11-24 检索（关键词限定标题/摘要字段），命中 45 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
+  
+
+  <!-- 两栏并排 -->
+  <table class="content-table single-col">
+    <!-- 表头 -->
+    <tr class="col-header-row">
+      <th>
+        &nbsp;&nbsp;<span class="col-header-arxiv">📄 PubMed 论文</span>
+        
+      </th>
+      
+    </tr>
+
+    
+      
+    
+
+    
+    
+
+    
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-12-01</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43070348/" target="_blank">Longitudinal CT-measured Respiratory Muscle Loss Predicts Mortality in Sepsis: A Multicentre Study.</a>
+                </div>
+                <div class="card-byline">Fu L, Gu Y, Liu S, Wang P, Tang X</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">Journal of cachexia, sarcopenia and muscle</span>
+                  
+                  <span class="badge-if">IF 9.9</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症患者胸壁呼吸肌体积丢失越多死亡风险越高（HR 1.05），纳入纵向CT参数的列线图预测28天至1年死亡的AUC达0.77~0.86，优于APACHE II
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43070348/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>多中心回顾性研究纳入793例脓毒症患者，按361/143/289分为训练集、内部验证集和外部验证集，通过两次间隔≥5天的非增强胸部CT测量胸壁呼吸肌体积变化，用Cox回归和LASSO构建列线图，主要结局为死亡。呼吸肌体积丢失越大死亡风险越高（HR=1.05，95% CI 1.04-1.07，p&lt;0.001）。列线图在训练集预测28天、3个月、1年死亡的AUC分别为0.77（0.71-0.82）、0.81（0.77-0.86）、0.86（0.82-0.90），内部验证集为0.70/0.78/0.82，外部验证集为0.74/0.78/0.79；较APACHE II的IDI为0.036~0.276（均p&lt;0.05）。K-M分析显示低、中、高危组生存差异显著（均log-rank p&lt;0.001）。局限为回顾性设计、需间隔≥5天的两次CT。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2027-01-01</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43068852/" target="_blank">Effects of Iloprost on Nitric Oxide Biomarkers in Patients With Septic Shock and Severe Endotheliopathy.</a>
+                </div>
+                <div class="card-byline">Mortensen KM, Itenov TS, Stensballe J, Johansson PI, Perner A</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">Acta anaesthesiologica Scandinavica</span>
+                  
+                  <span class="badge-if">IF 2.0</span>
+                  
+                  <span class="badge-evidence">RCT</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症休克伴严重内皮病患者中，伊洛前列素72小时输注未改变ADMA、SDMA等一氧化氮生物标志物水平（差异均无统计学意义）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43068852/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计为COMBAT-SHINE随机双盲试验的预设亚组分析，纳入274例ICU脓毒症休克且可溶性血栓调节蛋白&gt;10 ng/mL的成人患者，随机接受伊洛前列素1 ng/kg/min或安慰剂72小时输注。主要结局为0、24、48、72小时血浆ADMA、SDMA、精氨酸及高精氨酸浓度变化，采用线性混合模型分析。结果显示伊洛前列素组与安慰剂组ADMA估计均值差-4%（95% CI -13%~6%，p=0.4）、SDMA -2%（95% CI -14%~10%，p=0.7）、精氨酸9%（95% CI -6%~27%，p=0.2）、高精氨酸17%（95% CI -3%~42%，p=0.10），各时间点变化组间亦无差异（均p&gt;0.3）。作者结论为该剂量伊洛前列素不影响上述一氧化氮生物标志物；所有分析均为探索性，且为生物标志物替代终点而非临床结局。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43072571/" target="_blank">Recurrent enteral feeding intolerance and in-hospital mortality in critically ill patients: a time-updated analysis.</a>
+                </div>
+                <div class="card-byline">Tsao YC, Fu PK, Wang TJ, Hsu CY, Wang CY</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Respiratory medicine</span>
+                  
+                  <span class="badge-if">IF 3.8</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  机械通气重症患者中，反复肠内喂养不耐受与院内死亡升高相关（aHR 2.30），而首次不耐受事件与死亡无独立关联（aHR 1.12）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43072571/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>回顾性队列研究纳入447例机械通气且ICU停留≥3天的成人患者，在营养第1-7天每日评估肠内喂养不耐受（EFI），采用时变Cox模型分析，主要结局为院内死亡（132例死亡）。按最终累积状态，55.5%（248例）无EFI，15.2%（68例）为单日EFI，29.3%（131例）为反复EFI。时变模型显示首次EFI状态与院内死亡无独立关联（aHR 1.12，95% CI 0.66-1.90），而反复EFI状态死亡风险高于无EFI（aHR 2.30，95% CI 1.55-3.43）及首次EFI状态（aHR 2.06，95% CI 1.20-3.54）。滞后一天分析中反复vs无EFI关联仍存在，但反复vs首次EFI的对比不再显著。作者认为反复EFI可作为纵向再评估标志，但残留混杂和复合EFI定义限制因果推断。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">acute respiratory distress syndrome</span>
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43071126/" target="_blank">Subphenotyping and precision medicine approaches to ARDS.</a>
+                </div>
+                <div class="card-byline">Alipanah-Lechner N, Pensier J, Bos LDJ, Dianti J, Fraser JF</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">Intensive care medicine</span>
+                  
+                  <span class="badge-if">IF 7.0</span>
+                  
+                  <span class="badge-evidence">综述</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  ARDS六十年来仍按影像与氧合而非生物学定义，综述系统梳理临床、生理、形态与生物标志物亚表型，指出高炎症/低炎症亚型等存在治疗效应异质性证据
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43071126/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/10870872?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>本文为叙述性综述，以2023年欧洲重症医学会指南提出的研究问题为框架，系统总结ARDS亚表型划分的互补领域：临床（病因、快速改善型ARDS）、生理（气体交换、可复张性、弹性、通气比）、形态（局灶与非局灶影像模式）及生物学（单一损伤生物标志物、高炎症与低炎症亚表型），并审视其病理生理基础、时间动态及治疗效应异质性的回顾性证据。文章提出简约生物标志物组合、机器学习分类器和适应性篮式试验设计可能推动临床落地，并强调需在包括资源有限地区在内的多样人群中前瞻性验证。摘要未报告具体效应量，属概念与证据整合性文献，对床旁决策为间接指导。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">acute kidney injury</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43071713/" target="_blank">Protein and Energy Intake and Clinical Outcomes in Patients with Acute Kidney Injury during Continuous Renal Replacement Therapy: A Secondary Analysis of a Prospective Cohort Study.</a>
+                </div>
+                <div class="card-byline">Trakarnvanich T, Ostermann M, Phannajit J, Wannakittirat A, Kittiskulnam P</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">Blood purification</span>
+                  
+                  <span class="badge-if">IF 2.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  CRRT治疗的危重AKI患者中，蛋白质摄入最低四分位（&lt;0.09 g/kg/d）28天死亡风险显著升高（aHR 8.63），非存活者能量与蛋白质摄入均低于存活者
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43071713/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>前瞻性队列研究（NCT06254703）的二次分析，单中心纳入100例接受CRRT的危重AKI成人患者，中位年龄66岁、58%男性、28天死亡率54%，逐日计算肠内、肠外及非营养来源的能量与蛋白质供给，并测尿毒氮计算nPCR。非存活者接受的能量（15.8 vs 24.8 kcal/kg/d，p=0.001）和蛋白质（0 vs 0.72 g/kg/d，p=0.002）均低于存活者。蛋白质摄入与28天死亡呈J形关联，最低四分位（&lt;0.09 g/kg/d）在调整性别和mNUTRIC评分后死亡风险显著升高（aHR 8.63，95% CI 3.75-19.8，p&lt;0.001），该组28天透析脱离率与肾功能恢复率最低、无RRT天数最少。总蛋白摄入与nPCR仅弱相关（r=0.15，p=0.003）。作者称此为假设生成性分析，局限为单中心、样本量100例。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">critical illness</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43072570/" target="_blank">Early phosphate repletion and ventilator-free days in hypophosphatemic critical illness: a target trial emulation.</a>
+                </div>
+                <div class="card-byline">Lin X, Xu H, He X, Zhang H</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Respiratory medicine</span>
+                  
+                  <span class="badge-if">IF 3.8</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  低磷血症重症患者12小时内补磷未改善28天无呼吸机天数（MD -0.12天），仅提高血磷复常（OR 1.37）与高磷血症（OR 1.35）风险
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43072570/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>采用MIMIC-IV 3.0数据库进行目标试验模拟，纳入ICU入科48小时内首次血磷&lt;2.5 mg/dL的成人患者共14,823例，其中6,995例在12小时内补磷、7,828例未补，以12小时为界标随访，用稳定化逆概率加权估计平均处理效应，加权后最大绝对标准化均差0.059。主要结局28天无呼吸机天数在早期补磷组与未补组间无差异（MD -0.12天，95% CI -0.43~0.18，p=0.424），ICU-free天数、死亡率和肾脏替代治疗亦无差异。在有重复血磷测量的患者中，早期补磷与血磷复常几率更高相关（OR 1.37，95% CI 1.24-1.50），也与高磷血症风险升高相关（OR 1.35，95% CI 1.03-1.76）。作者结论支持选择性而非常规早期补磷；局限为观察性目标试验模拟的残余混杂。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    <span class="tag">vasopressor</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43070668/" target="_blank">Multidimensional Predictors of Post-Traumatic Stress in Relatives of Critically Ill Patients.</a>
+                </div>
+                <div class="card-byline">Reignier J, Kentish-Barnes N, Pochard F, Vinnat V, Etain B</div>
+                <div class="card-meta">
+                  <span class="rank-badge">7</span>
+                  <span class="card-journal">American journal of respiratory and critical care medicine</span>
+                  
+                  <span class="badge-if">IF 0.7</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  机械通气≥48小时患者的家属中，3个月时11.3%存在可能PTSD、38.2%有临床相关创伤后应激症状，血管活性药使用与临终决策等病情严重度指标与症状加重相关
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43070668/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>前瞻性多中心队列研究（FAME），法国60个ICU连续纳入机械通气≥48小时的成人患者各1名家属，共1346名家属，936名（69.5%）完成3个月PCL-5评估，主要结局为3个月PCL-5评分。106名（11.3%）为可能PTSD（PCL-5≥31），358名（38.2%）存在临床相关创伤后应激症状。与较高PCL-5评分相关的因素包括既往特征（社会隔离、独居、自感残疾、心理创伤史）、早期症状（焦虑、围创伤期解离、失眠）以及患者病情更重（使用血管活性药、临终决策）；男性性别和特定医师沟通行为与较低评分相关。作者认为早期心理标志有助于识别高危家属，改善沟通实践可能降低风险。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-23</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43072741/" target="_blank">Implementation of Respiratory Support Bundle Decreases Invasive Mechanical Ventilation Duration in VLBW Infants.</a>
+                </div>
+                <div class="card-byline">Fitzgerald JK, Ashour D, Fierstein JL, Machry JS, Nickel N</div>
+                <div class="card-meta">
+                  <span class="rank-badge">8</span>
+                  <span class="card-journal">American journal of perinatology</span>
+                  
+                  <span class="badge-if">IF 1.7</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  VLBW早产儿实施呼吸支持集束化方案后，中位累计有创机械通气时间由27天降至5.5天，再插管与重度IVH未见增加
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43072741/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>单中心IV级NICU质量改进项目，纳入96例极低出生体重儿（基线28例、实施后68例），通过四轮PDSA循环实施多学科呼吸支持集束（临床路径、拔管准备清单、标准化容量目标通气、血氧饱和度直方图），主要结局为累计有创机械通气（IMV）天数。中位累计IMV时间从27天降至5.5天，PDSA及可持续性周期中集束依从性均达标；再插管率和重度脑室内出血率两组无显著差异。作者结论为该集束可缩短IMV时间而不增加不良结局。局限为单中心、样本量小、前后对照设计，且人群为新生儿而非成人ICU。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+    
+  </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    由 <strong>arxiv-daily</strong> 自动生成 · 每天 12:00 推送<br>
+    
+    <a href="https://HenryHe-CCM.github.io/Daily-Digest-Assistant/archive.html" target="_blank">📚 查看历史归档</a> ·
+    
+    <a href="https://github.com/yzbcs/Daily-Digest-Assistant">GitHub</a>
+  </div>
+
+</div>
+</body>
+</html>
