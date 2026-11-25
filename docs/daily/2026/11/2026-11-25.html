@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日推送 · 2026年11月25日</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI', sans-serif; padding: 30px 16px; }
+
+.email-wrap { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.10); }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 28px 28px 20px; color: #fff; }
+.header .eyebrow { font-size: 11px; letter-spacing: 3px; color: #7ecfff; text-transform: uppercase; margin-bottom: 8px; }
+.header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.header .meta { font-size: 12px; color: #a0b8cc; margin-bottom: 14px; }
+.pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 13px; font-size: 11px; color: #d0e8ff; }
+.pill b { color: #7ecfff; }
+
+/* ── 两栏布局 ── */
+.content-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.col-header-row th { width: 50%; text-align: left; padding: 14px 14px 10px; background: #fff; border-bottom: 1px solid #e8eaef; }
+.col-header-arxiv { color: #3b5bdb; font-size: 13px; font-weight: 700; border-bottom: 2px solid #3b5bdb; display: inline-block; padding-bottom: 2px; }
+.col-header-xhs { color: #FF2442; font-size: 13px; font-weight: 700; border-bottom: 2px solid #FF2442; display: inline-block; padding-bottom: 2px; }
+
+/* 卡片行 */
+.card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
+.card-row td:first-child { border-right: 1px solid #e8eaef; }
+.rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+
+/* ── Cards ── */
+.card { border: 1px solid #e8eaef; border-radius: 8px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+.card-inner { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #555; }
+.card-date { font-size: 10px; color: #aaa; white-space: nowrap; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.45; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
+.card-byline { font-size: 11px; color: #999; }
+
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
+.summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
+.summary-xhs .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #FF2442; display: block; margin-bottom: 2px; }
+
+.card-links { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; text-decoration: none; }
+.btn-arxiv { background: #b31b1b; color: #fff; }
+.btn-pdf { background: #1a73e8; color: #fff; }
+.btn-xhs { background: #FF2442; color: #fff; }
+
+/* ── details/summary 展开收起 ── */
+details { border-top: 1px solid #eef0f8; background: #fafbff; }
+details summary { display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; list-style: none; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▶"; font-size: 9px; }
+details[open] summary::before { content: "▼"; }
+details summary:hover { background: #eef2ff; }
+.detail-body { padding: 8px 12px 12px; font-size: 11px; color: #444; line-height: 1.7; white-space: pre-wrap; border-top: 1px solid #eef0f8; }
+.detail-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b5bdb; display: block; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.footer { background: #f8f9ff; border-top: 1px solid #eaecf0; padding: 16px 24px; text-align: center; font-size: 11px; color: #aaa; }
+.footer a { color: #3b5bdb; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="email-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">📬 Daily Digest</div>
+    <h1>今日推送</h1>
+    <div class="meta">2026年11月25日 · 星期三</div>
+    <div class="pills">
+      
+      <div class="pill">📄 PubMed <b>8</b> 篇</div>
+      
+      
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
+    </div>
+  </div>
+
+  
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-23 至 2026-11-25 检索（关键词限定标题/摘要字段），命中 42 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
+  
+
+  <!-- 两栏并排 -->
+  <table class="content-table single-col">
+    <!-- 表头 -->
+    <tr class="col-header-row">
+      <th>
+        &nbsp;&nbsp;<span class="col-header-arxiv">📄 PubMed 论文</span>
+        
+      </th>
+      
+    </tr>
+
+    
+      
+    
+
+    
+    
+
+    
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-12-01</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43070348/" target="_blank">Longitudinal CT-measured Respiratory Muscle Loss Predicts Mortality in Sepsis: A Multicentre Study.</a>
+                </div>
+                <div class="card-byline">Fu L, Gu Y, Liu S, Wang P, Tang X</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">Journal of cachexia, sarcopenia and muscle</span>
+                  
+                  <span class="badge-if">IF 9.8</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症患者胸壁呼吸肌体积丢失越大死亡风险越高（HR 1.05），列线图预测1年死亡率AUC达0.86
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43070348/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/PMC13791369?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>多中心回顾性研究，纳入793例脓毒症患者，分训练集（n=361）、内部验证集（n=143）和外部验证集（n=289）。通过两次间隔≥5天的非增强胸部CT测量胸壁呼吸肌体积变化，构建Cox回归列线图。呼吸肌体积丢失与死亡率独立相关（HR 1.05，95% CI 1.04-1.07，p&lt;0.001）。列线图训练集28天、3个月、1年死亡率AUC分别为0.77、0.81、0.86；外部验证集分别为0.74、0.78、0.79。较APACHE II评分IDI为0.036-0.276（均p&lt;0.05）。局限：回顾性设计，CT测量时机不统一。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43078115/" target="_blank">Ringer&#39;s lactate versus saline in the fluids in septic shock (FISSH) trial: a multicentre, blinded, parallel-group, randomised controlled trial.</a>
+                </div>
+                <div class="card-byline">Rochwerg B, Lamontagne F, Austin P, Millen T, D&#39;Aragon F</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">The Lancet. Respiratory medicine</span>
+                  
+                  <span class="badge-if">IF 11.3</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症休克患者中，乳酸林格液与生理盐水30天院内死亡率无差异（33.6% vs 33.0%，RR 1.02）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43078115/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>多中心、盲法、平行组RCT，纳入加拿大和沙特30家医院的1113例脓毒症休克成人患者，随机接受乳酸林格液或0.9%生理盐水作为全部补液和维持液。主要终点为30天院内死亡率：乳酸林格液组33.6%（187例），生理盐水组33.0%（180例），RR 1.02（95% CI 0.86-1.21），p=0.80，无严重不良事件。结论为两种晶体液对脓毒症休克患者30天院内死亡率无影响。局限：未报告其他临床次要终点细节，两组基线APACHE II评分均约24.7分。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">delirium</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43077801/" target="_blank">Perioperative noise isolation for postoperative delirium in older adults undergoing hip surgery: a randomized clinical trial.</a>
+                </div>
+                <div class="card-byline">Yang C, Wang G, Lu ZY, Zhu JX, Chen X</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Journal of clinical anesthesia</span>
+                  
+                  <span class="badge-if">IF 4.5</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  髋部手术老年患者围术期佩戴耳罩隔音使术后谵妄发生率从22.8%降至12.0%（RR 0.53）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43077801/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>单中心、患者与评估者盲法RCT，纳入320例≥65岁在七氟烷麻醉下行髋部手术的患者，按年龄、手术类型和计划SICU入住分层区组随机，比较麻醉诱导至拔管前佩戴耳罩隔音与常规护理。完成研究316例（每组158例），平均年龄78岁。术后7天内或出院前谵妄发生率：隔音组12.0%（19例）vs 对照组22.8%（36例），RR 0.53（95% CI 0.32-0.88），P=0.012；绝对风险降低10.8%，NNT=9。多因素校正后aOR 0.42（95% CI 0.23-0.80）。隔音组中重度疼痛和补救镇痛更少。局限：单中心，仅限髋部手术人群。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43076168/" target="_blank">Prehospital Antibiotics for Patients With Suspected Sepsis: The PITSTOP-Antibiotics Factorial Randomized Clinical Trial.</a>
+                </div>
+                <div class="card-byline">Scales DC, Rogowsky A, Seymour CW, Burry L, Christenson J</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">JAMA</span>
+                  
+                  <span class="badge-if">IF 10.2</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  疑似脓毒症患者院前头孢曲松较安慰剂未降低院内死亡率（18.0% vs 18.4%，RR 0.97）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43076168/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>多中心2×2析因、安慰剂对照RCT，加拿大安大略省4个急救服务，纳入2091例疑似脓毒症成人（感染+发热≥38.0°C+收缩压&lt;100 mmHg）。院前随机接受头孢曲松1g肌注或安慰剂，急诊可开放使用抗生素。主要终点院内死亡率：头孢曲松组18.0%（182/1009），安慰剂组18.4%（186/1011），RR 0.97（95% CI 0.81-1.17），P=0.77；17项次要终点均相似。局限：院前给药至急诊平均仅提前约4小时，且92%患者在院内接受了抗生素。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    <span class="tag">vasopressor</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43076208/" target="_blank">Prehospital Fluid Resuscitation for Patients With Suspected Sepsis: The PITSTOP-Fluids Factorial Randomized Clinical Trial.</a>
+                </div>
+                <div class="card-byline">Scales DC, Rogowsky A, Seymour CW, Burry L, Christenson J</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">JAMA</span>
+                  
+                  <span class="badge-if">IF 10.2</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  疑似脓毒症院前 liberal 补液较限制性补液未降低院内死亡率（18.0% vs 18.3%，RR 0.98）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43076208/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>多中心2×2析因RCT，加拿大安大略省4个急救服务及接收医院，纳入1686例疑似脓毒症成人（感染+发热≥38.0°C+收缩压&lt;100 mmHg）。比较院前 liberal 补液（最多2L生理盐水）与常规补液（SBP&lt;90才补，≥100停）。主要终点院内死亡率：liberal组18.0%（149/830），常规组18.3%（149/816），RR 0.98（95% CI 0.80-1.20），P=0.82；17项次要终点均无差异，肺水肿等不良事件少见。局限：开放标签设计（液体无法盲法），实际补液量差异中位910 mL。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">acute respiratory distress syndrome</span>
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43078433/" target="_blank">Early multidomain trajectory phenotypes in mechanically ventilated COVID-19-related ARDS and long-term mortality among 30-day survivors: retrospective observational study.</a>
+                </div>
+                <div class="card-byline">Kudliński B, Zawadzki J, Kozłowski R, Hallala J, Dąbrowski M</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Respiratory medicine</span>
+                  
+                  <span class="badge-if">IF 3.8</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  机械通气COVID-19 ARDS患者中，多系统高负荷表型30天存活者后续死亡风险为低负荷表型的10.42倍
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43078433/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>单中心回顾性二次分析，纳入283例需有创机械通气的COVID-19相关ARDS成人，270例有纵向数据。基于第0-7天7个域（NLR、CRP、PaO2/FiO2、pH、乳酸、血流动力学不稳定、血管活性药物支持）用混合效应模型提取14个特征，PCA后k-means聚类得到3种表型：炎症-肺持续/循环改善型（P1，n=48）、多系统高负荷/循环持续型（P2，n=47）、低负荷/炎症消退型（P3，n=79）。30天死亡率整体比较p=0.166未达显著；118例30天存活者中22例后续死亡，P2 vs P3校正OR 10.42（95% CI 2.09-51.81；整体p=0.018）。局限：单中心、事件数少、缺失确切死亡日期，作者称仅为假设生成。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43078434/" target="_blank">Evaluation of Bioelectric Impedance analysis in a cohort of non-invasive Ventilated patients with Acute Respiratory failure: The NIVAR Study.</a>
+                </div>
+                <div class="card-byline">Fuset-Cabanes MP, Pérez-Fernández XL, Via-Clavero G, Gordillo-Benítez MA, di Paolo F</div>
+                <div class="card-meta">
+                  <span class="rank-badge">7</span>
+                  <span class="card-journal">Respiratory medicine</span>
+                  
+                  <span class="badge-if">IF 3.8</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  COVID-19急性呼吸衰竭NIV患者中，较高相位角与更低住院死亡率相关（HR 0.43）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43078434/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>单中心前瞻性观察队列（NIVAR研究），纳入74例因COVID-19急性低氧性呼吸衰竭接受NIV的ICU患者，58例（78.4%）男性，中位年龄63.5岁。NIV开始24小时内行生物电阻抗分析。58.1%（43例）NIV失败需气管插管，中位插管时间4天。校正混杂因素后，较高相位角与NIV失败趋势降低相关（HR 0.54，95% CI 0.29-1.00，P=0.05），与住院死亡率降低相关（HR 0.43，95% CI 0.24-0.76，P=0.004）。局限：单中心、样本量小（74例），观察性设计无法确立因果。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-24</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43076004/" target="_blank">An Interpretable Machine Learning Model for Early Prediction of Septic Shock in Intensive Care Unit Patients: The Incremental Value of Cardiac Output.</a>
+                </div>
+                <div class="card-byline">Yue Y, Luo S, Liu S, Ye W, Xu Y</div>
+                <div class="card-meta">
+                  <span class="rank-badge">8</span>
+                  <span class="card-journal">Journal of intensive care medicine</span>
+                  
+                  <span class="badge-if">IF 3.1</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  将心输出量纳入脓毒症休克预测模型使AUROC从0.862升至0.881，心输出量重要性仅次于乳酸
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43076004/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>基于MIMIC-IV v3.0数据库的回顾性队列研究，纳入1716例ICU成人患者、16140个小时预测窗口，预测6小时内脓毒症休克发生。开发集n=1372，测试集n=344。XGBoost模型中，加入心输出量、心指数、每搏量指数和体循环血管阻力指数后，交叉验证AUROC从0.862（95% CI 0.847-0.877）提升至0.881（0.867-0.894），增益0.018（DeLong p=3.22×10⁻¹¹），敏感度从0.249升至0.316。SHAP分析中心输出量重要性仅次于乳酸，剔除后AUROC下降0.017。局限：单中心数据库回顾性设计，需外部验证。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+    
+  </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    由 <strong>arxiv-daily</strong> 自动生成 · 每天 12:00 推送<br>
+    
+    <a href="https://HenryHe-CCM.github.io/Daily-Digest-Assistant/archive.html" target="_blank">📚 查看历史归档</a> ·
+    
+    <a href="https://github.com/yzbcs/Daily-Digest-Assistant">GitHub</a>
+  </div>
+
+</div>
+</body>
+</html>
