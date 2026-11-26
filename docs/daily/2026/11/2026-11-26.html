@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日推送 · 2026年11月26日</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI', sans-serif; padding: 30px 16px; }
+
+.email-wrap { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.10); }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 28px 28px 20px; color: #fff; }
+.header .eyebrow { font-size: 11px; letter-spacing: 3px; color: #7ecfff; text-transform: uppercase; margin-bottom: 8px; }
+.header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.header .meta { font-size: 12px; color: #a0b8cc; margin-bottom: 14px; }
+.pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 13px; font-size: 11px; color: #d0e8ff; }
+.pill b { color: #7ecfff; }
+
+/* ── 两栏布局 ── */
+.content-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.col-header-row th { width: 50%; text-align: left; padding: 14px 14px 10px; background: #fff; border-bottom: 1px solid #e8eaef; }
+.col-header-arxiv { color: #3b5bdb; font-size: 13px; font-weight: 700; border-bottom: 2px solid #3b5bdb; display: inline-block; padding-bottom: 2px; }
+.col-header-xhs { color: #FF2442; font-size: 13px; font-weight: 700; border-bottom: 2px solid #FF2442; display: inline-block; padding-bottom: 2px; }
+
+/* 卡片行 */
+.card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
+.card-row td:first-child { border-right: 1px solid #e8eaef; }
+.rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+
+/* ── Cards ── */
+.card { border: 1px solid #e8eaef; border-radius: 8px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+.card-inner { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #555; }
+.card-date { font-size: 10px; color: #aaa; white-space: nowrap; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.45; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
+.card-byline { font-size: 11px; color: #999; }
+
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
+.summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
+.summary-xhs .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #FF2442; display: block; margin-bottom: 2px; }
+
+.card-links { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; text-decoration: none; }
+.btn-arxiv { background: #b31b1b; color: #fff; }
+.btn-pdf { background: #1a73e8; color: #fff; }
+.btn-xhs { background: #FF2442; color: #fff; }
+
+/* ── details/summary 展开收起 ── */
+details { border-top: 1px solid #eef0f8; background: #fafbff; }
+details summary { display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; list-style: none; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▶"; font-size: 9px; }
+details[open] summary::before { content: "▼"; }
+details summary:hover { background: #eef2ff; }
+.detail-body { padding: 8px 12px 12px; font-size: 11px; color: #444; line-height: 1.7; white-space: pre-wrap; border-top: 1px solid #eef0f8; }
+.detail-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b5bdb; display: block; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.footer { background: #f8f9ff; border-top: 1px solid #eaecf0; padding: 16px 24px; text-align: center; font-size: 11px; color: #aaa; }
+.footer a { color: #3b5bdb; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="email-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">📬 Daily Digest</div>
+    <h1>今日推送</h1>
+    <div class="meta">2026年11月26日 · 星期四</div>
+    <div class="pills">
+      
+      <div class="pill">📄 PubMed <b>6</b> 篇</div>
+      
+      
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
+    </div>
+  </div>
+
+  
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-24 至 2026-11-26 检索（关键词限定标题/摘要字段），命中 44 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
+  
+
+  <!-- 两栏并排 -->
+  <table class="content-table single-col">
+    <!-- 表头 -->
+    <tr class="col-header-row">
+      <th>
+        &nbsp;&nbsp;<span class="col-header-arxiv">📄 PubMed 论文</span>
+        
+      </th>
+      
+    </tr>
+
+    
+      
+    
+
+    
+    
+
+    
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    <span class="tag">acute kidney injury</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43084613/" target="_blank">Survival and clinical outcomes of critically ill COVID-19 patients requiring invasive mechanical ventilation in Palestine: A multicenter retrospective cohort study.</a>
+                </div>
+                <div class="card-byline">Alkaissi A, Assi F, Sadaqa W, Said NB, Al Ghool I</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">PloS one</span>
+                  
+                  <span class="badge-if">IF 4.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  巴勒斯坦ICU有创通气COVID-19患者出院存活率仅8.7%，急性肾损伤与心血管并发症提示预后更差
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43084613/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/PMC13805913?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：多中心回顾性队列研究，纳入2020年8月至2021年4月巴勒斯坦3家医院ICU的150例需有创机械通气的成人COVID-19患者。干预或暴露与主要结局：暴露为有创机械通气及临床因素，主要结局为院内生存率及临床结局；仅13例（8.7%）存活出院，急性肾损伤（60.7%）和心血管并发症（45.3%）与更差结局相关，存活者机械通气中位15天 vs 非存活者6天（p&lt;0.001），ICU中位住院27天 vs 11天。结论与局限：资源有限环境下有创通气COVID-19患者生存率极低，但为回顾性设计、存活者仅13例，关联应视为探索性而非独立预测因素。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43086123/" target="_blank">Prevalence and outcomes of bloodstream infections caused by multidrug-resistant bacteria in the emergency department: results from a prospective multicentre study.</a>
+                </div>
+                <div class="card-byline">Monari C, Grimaldi P, Cornelli A, Porro F, Allegorico E</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">European journal of internal medicine</span>
+                  
+                  <span class="badge-if">IF 4.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  急诊血流感染中29.2%为多重耐药菌，留置尿管是唯一独立预测因素（OR 3.423），28天死亡率34.2%
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43086123/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：前瞻性观察性多中心研究，7个中心，纳入2025年1月至10月急诊确诊血流感染的210例成人患者。干预或暴露与主要结局：评估多重耐药菌（MDRO）血流感染患病率及相关因素；192例有药敏数据者中56例（29.2%）分离出MDRO，留置尿管是唯一独立预测因素（OR 3.423，95% CI 1.522-7.695，p=0.003）；28天死亡率34.2%、7天死亡率10.3%、临床缓解率46.1%。结论与局限：近三分之一急诊血流感染由MDRO引起，基线SOFA评分越高28天死亡风险越高（OR 1.379，95% CI 1.009-1.885，p=0.044），感染科会诊为保护因素（OR 0.137，95% CI 0.021-0.901，p=0.039）；摘要未报告其他局限。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-19</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43077614/" target="_blank">Assessment of Critical Care Nurses&#39; Knowledge, Compliance, and Barriers Related to Implementation of the Ventilator-Associated Pneumonia Prevention Guidelines.</a>
+                </div>
+                <div class="card-byline">Asmar I, Almahmoud O, Manassrah A, Abd Al Hamed R, Moqady D</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Critical care nursing quarterly</span>
+                  
+                  <span class="badge-if">IF 1.6</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  巴勒斯坦重症护士VAP预防知识均分仅5.12/10，依从率38.6%-89.4%，人力不足与资源有限是主要障碍
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43077614/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：横断面描述性相关研究，纳入巴勒斯坦329名重症监护护士（CCNs），采用自填问卷。干预或暴露与主要结局：评估VAP预防指南的知识、依从性与障碍；知识均分5.12/10，自报依从率38.6%-89.4%，床头抬高30-45度为最高依从项、封闭式吸痰系统最低；最常见障碍为护理人力不足和资源有限。结论与局限：知识与实践存在明显缺口，受组织和资源因素影响，需针对性教育、充足人力与资源分配；为自报问卷横断面设计，可能存在报告偏倚，摘要未报告多因素分析。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43084731/" target="_blank">Effect of Chlorhexidine Oral Care on Ventilator-Associated Events in 4 ICU Populations: A Retrospective Study.</a>
+                </div>
+                <div class="card-byline">Carroll Simmons JS, Peach BC, Sole ML, Xie R, Bourgault AM</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">Dimensions of critical care nursing : DCCN</span>
+                  
+                  <span class="badge-if">IF 1.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  机械通气患者每增加一次氯己定口腔护理，VAE风险升高4.9%，机械通气时间增6小时、住院日增0.55天
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43084731/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：回顾性分析，基于美国佛罗里达州一家四级医院电子病历数据库的1567例机械通气患者，分心脏外科、心脏内科、多系统、神经四个ICU人群。干预或暴露与主要结局：暴露为每日两次0.12%氯己定口腔护理，主要结局为呼吸机相关事件（VAE）、住院时间、机械通气小时数和院内死亡；心脏外科VAE率最高（每1000通气日47.13），神经ICU最低（5.87）；每增加一次氯己定治疗VAE风险增加4.9%、机械通气延长6小时、住院日增加0.55天。结论与局限：氯己定口腔护理未降低VAE、通气时间、住院日或死亡率，可能仅反映病情严重程度；心脏外科样本代表性有限，死亡率分析受数据缺失限制。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-19</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43077618/" target="_blank">Relationship Between Level of Consciousness, Pressure Ulcer Risk, and Pain Behaviors in Mechanically Ventilated Patients.</a>
+                </div>
+                <div class="card-byline">Yücel S, Karadag Arli S</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">Critical care nursing quarterly</span>
+                  
+                  <span class="badge-if">IF 1.6</span>
+                  
+                  <span class="badge-evidence">其他研究</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  150例机械通气患者意识水平与疼痛、压疮风险仅弱相关（r=0.190、0.306），压疮风险与正性肌力支持和皮肤完整性相关（P&lt;0.001）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43077618/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：描述性相关研究，纳入2023年11月至2024年2月一家大学医院ICU的150例机械通气患者。干预或暴露与主要结局：使用行为疼痛量表（BPS）、Jackson/Cubbin压疮风险评估工具和FOUR评分评估意识、压疮风险与疼痛行为；FOUR均分6.78±2.15，Jackson/Cubbin均分29.68±2.79，BPS均分4.73±1.46；压疮风险与正性肌力支持和皮肤完整性相关（P&lt;0.001），接受肠内营养及未镇静、未用正性肌力药者BPS更高（P&lt;0.05）；FOUR与BPS（r=0.190）、Jackson/Cubbin（r=0.306）呈弱正相关。结论与局限：患者意识与疼痛水平虽低，仍需常规评估疼痛、皮肤完整性和意识；为单中心描述性研究，不能推断因果。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43086046/" target="_blank">[Emphasizing multidisciplinary collaborative management of severe intra-abdominal infection].</a>
+                </div>
+                <div class="card-byline">Huang YQ, Yan ZP, Yu FL, Wang DR</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Zhonghua wai ke za zhi [Chinese journal of surgery]</span>
+                  
+                  <span class="badge-missing">IF 未收录</span>
+                  
+                  <span class="badge-evidence">综述</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  重度腹腔感染可迅速进展为脓毒症与脓毒性休克，需外科与重症团队分阶段协同平衡感染源控制与器官保护
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43086046/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：中文综述（述评），聚焦普通外科常见危重症重度腹腔感染（SIAI）的多学科协作管理，非原始研究。干预或暴露与主要结局：系统阐述SIAI病理生理特点及外科与重症医学交叉属性，提出联合外科-ICU评估、分阶段协作管理和多学科团队协作，在感染源控制与器官保护间实现动态平衡，并讨论急性监护外科模式下的整合管理；摘要未报告效应量。结论与局限：强调感染源控制与器官支持并重的多学科协作模式建设，属专家述评，无原始数据，结论需临床研究验证。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+    
+  </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    由 <strong>arxiv-daily</strong> 自动生成 · 每天 12:00 推送<br>
+    
+    <a href="https://HenryHe-CCM.github.io/Daily-Digest-Assistant/archive.html" target="_blank">📚 查看历史归档</a> ·
+    
+    <a href="https://github.com/yzbcs/Daily-Digest-Assistant">GitHub</a>
+  </div>
+
+</div>
+</body>
+</html>
