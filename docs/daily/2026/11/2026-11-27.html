@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日推送 · 2026年11月27日</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI', sans-serif; padding: 30px 16px; }
+
+.email-wrap { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.10); }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 28px 28px 20px; color: #fff; }
+.header .eyebrow { font-size: 11px; letter-spacing: 3px; color: #7ecfff; text-transform: uppercase; margin-bottom: 8px; }
+.header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.header .meta { font-size: 12px; color: #a0b8cc; margin-bottom: 14px; }
+.pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 13px; font-size: 11px; color: #d0e8ff; }
+.pill b { color: #7ecfff; }
+
+/* ── 两栏布局 ── */
+.content-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.col-header-row th { width: 50%; text-align: left; padding: 14px 14px 10px; background: #fff; border-bottom: 1px solid #e8eaef; }
+.col-header-arxiv { color: #3b5bdb; font-size: 13px; font-weight: 700; border-bottom: 2px solid #3b5bdb; display: inline-block; padding-bottom: 2px; }
+.col-header-xhs { color: #FF2442; font-size: 13px; font-weight: 700; border-bottom: 2px solid #FF2442; display: inline-block; padding-bottom: 2px; }
+
+/* 卡片行 */
+.card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
+.card-row td:first-child { border-right: 1px solid #e8eaef; }
+.rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+
+/* ── Cards ── */
+.card { border: 1px solid #e8eaef; border-radius: 8px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+.card-inner { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #555; }
+.card-date { font-size: 10px; color: #aaa; white-space: nowrap; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.45; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
+.card-byline { font-size: 11px; color: #999; }
+
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
+.summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
+.summary-xhs .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #FF2442; display: block; margin-bottom: 2px; }
+
+.card-links { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; text-decoration: none; }
+.btn-arxiv { background: #b31b1b; color: #fff; }
+.btn-pdf { background: #1a73e8; color: #fff; }
+.btn-xhs { background: #FF2442; color: #fff; }
+
+/* ── details/summary 展开收起 ── */
+details { border-top: 1px solid #eef0f8; background: #fafbff; }
+details summary { display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; list-style: none; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▶"; font-size: 9px; }
+details[open] summary::before { content: "▼"; }
+details summary:hover { background: #eef2ff; }
+.detail-body { padding: 8px 12px 12px; font-size: 11px; color: #444; line-height: 1.7; white-space: pre-wrap; border-top: 1px solid #eef0f8; }
+.detail-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b5bdb; display: block; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.footer { background: #f8f9ff; border-top: 1px solid #eaecf0; padding: 16px 24px; text-align: center; font-size: 11px; color: #aaa; }
+.footer a { color: #3b5bdb; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="email-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">📬 Daily Digest</div>
+    <h1>今日推送</h1>
+    <div class="meta">2026年11月27日 · 星期五</div>
+    <div class="pills">
+      
+      <div class="pill">📄 PubMed <b>8</b> 篇</div>
+      
+      
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
+    </div>
+  </div>
+
+  
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-25 至 2026-11-27 检索（关键词限定标题/摘要字段），命中 46 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
+  
+
+  <!-- 两栏并排 -->
+  <table class="content-table single-col">
+    <!-- 表头 -->
+    <tr class="col-header-row">
+      <th>
+        &nbsp;&nbsp;<span class="col-header-arxiv">📄 PubMed 论文</span>
+        
+      </th>
+      
+    </tr>
+
+    
+      
+    
+
+    
+    
+
+    
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43094053/" target="_blank">Phosphate-containing versus phosphate-free replacement solution in critically ill patients requiring continuous renal replacement therapy: a randomized controlled trial.</a>
+                </div>
+                <div class="card-byline">Jin L, Zhou Z, Xu Q, Wang F, Chen K</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">Renal failure</span>
+                  
+                  <span class="badge-if">IF 4.5</span>
+                  
+                  <span class="badge-evidence">RCT</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  含磷置换液使CRRT患者48小时内低磷血症发生率由68.9%降至15.6%（校正OR 0.05），但低血糖更常见（8.9% vs 0%）
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43094053/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>多中心随机对照试验，纳入90例需CRRT的危重患者，1:1随机接受含磷或不含磷置换液（各45例），基线年龄、SOFA评分、脓毒症比例、CKD及血磷水平可比。主要终点为CRRT前48小时低磷血症发生率：含磷组15.6% vs 不含磷组68.9%，校正OR 0.05（95%CI 0.01-0.18）。含磷组需补磷更少；低血糖更常见（8.9% vs 0%，P=0.042）；血肌酐与SOFA评分组间无显著差异。作者结论为含磷置换液可减少低磷血症及补磷需求，但需警惕一过性低血糖和高磷血症，尤其对已有高磷者需监测血磷与血糖。局限为样本量小（90例）、随访短，生化获益能否转化为临床结局改善尚需更大规模试验。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43095222/" target="_blank">Empirical broad-spectrum antibiotic use, de-escalation, and outcomes in Enterobacterales bloodstream infections: a retrospective observational study.</a>
+                </div>
+                <div class="card-byline">Capsoni N, Ottolenghi S, Bettina M, De Felice L, Pagani L</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">JAC-antimicrobial resistance</span>
+                  
+                  <span class="badge-if">IF 3.2</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  急诊肠杆菌血流感染中57.1%为脓毒症、16.5%为脓毒性休克；3GCR-E占25.6%且经验治疗不当风险高10.7倍，但降阶梯仅31.7%
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43095222/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/PMC13798645?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>意大利Niguarda医院急诊科回顾性观察研究，连续纳入2019年1月至2023年12月单一微生物肠杆菌血流感染成人667例，其中脓毒症57.1%、脓毒性休克16.5%。产三代头孢耐药肠杆菌（3GCR-E）占25.6%，与经验性治疗不当风险升高10倍相关（OR 10.7，95%CI 6.10-18.74）。哌拉西林-他唑巴坦为最常见经验用药（54.3%）；非3GCR-E感染者中57.7%接受了不必要的广谱覆盖，而符合降阶梯条件者仅31.7%实施降阶梯。院内死亡率10.2%，3GCR-E与非3GCR-E无差异（OR 0.89，95%CI 0.49-1.6）；死亡与年龄（OR 1.55）、Charlson指数（OR 1.24）、免疫抑制（OR 2.07）、呼吸道感染（OR 3.13）及脓毒性休克（OR 5.49，95%CI 2.95-10.21）相关。局限为单中心、观察性设计，可能存在指征混杂。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43096173/" target="_blank">Association of Right Ventricular-Pulmonary Arterial Coupling With Short-Term Prognosis in Patients With Sepsis: A Bedside Echocardiography-Based Retrospective Study.</a>
+                </div>
+                <div class="card-byline">Wu G, Chen M, Li M, Lv Q, Zhou C</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Journal of intensive care medicine</span>
+                  
+                  <span class="badge-if">IF 3.1</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症患者TAPSE/PASP每升高0.1 mm/mmHg，28天死亡OR 0.76；单独预测AUC 0.799，但加入临床模型未显著提升区分度
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43096173/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计为单中心回顾性队列，纳入360例入住ICU 24小时内完成床旁超声的脓毒症成人。暴露为右室-肺动脉耦联指标TAPSE/PASP，主要终点28天和90天死亡率。107例（29.7%）28天内死亡，非存活者TAPSE/PASP更低[0.40 vs 0.60 mm/mmHg，P&lt;0.001]。校正年龄、SOFA、乳酸、脓毒性休克、机械通气及NT-proBNP后，每0.1 mm/mmHg升高与28天死亡风险降低相关（OR 0.76，95%CI 0.61-0.93，P=0.012）；单独AUC 0.799，最佳切点约0.466 mm/mmHg；加入临床模型后AUC由0.846升至0.854，但DeLong P=0.234未达统计学意义。90天死亡HR 0.83（95%CI 0.71-0.96，P=0.013）。局限为单中心、回顾性、样本量有限，作者认为需多中心前瞻性验证。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    <span class="tag">vasopressor</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43096175/" target="_blank">Acute Pulmonary Embolism in the ICU: A Twelve-Year Analysis of 195 392 Hospitalizations Across United States Health Systems.</a>
+                </div>
+                <div class="card-byline">Kashiouris MG, Desai M, Chowdhury J, Visco C, Sessler CN</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">Journal of intensive care medicine</span>
+                  
+                  <span class="badge-if">IF 3.1</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  美国ICU急性PE住院12年增至每千例ICU住院10.52例，院内死亡率8.9%；社会脆弱性最高四分位死亡OR 1.24
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43096175/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>基于Epic Cosmos电子病历数据库的回顾性队列，覆盖2014年1月至2025年12月共48个季度，纳入189 663名成人的195 392次以急性PE为主要诊断的ICU住院。ICU内急性PE发生率由每千例ICU住院6.40升至10.52（每年增加0.34/1000，95%CI 0.31-0.37；Poisson率比1.037/年）。总院内死亡率8.9%，2014年10.5%降至2019年8.3%，2021年疫情期峰值9.7%，随后稳定在8.5%-9.0%。血管活性药使用由11.9%升至20.8%，经皮机械取栓由2.6%（2016）升至31.2%（2025）；直接口服抗凝药由17.7%升至74.3%，华法林由60.1%降至4.1%。死亡率随社会脆弱性指数四分位升高，从8.5%（最低）至10.7%（最高），校正严重度、合并症、种族、乡村性及时间后最高四分位OR 1.24（95%CI 1.16-1.33，c统计量0.717），E值1.79。局限为电子病历编码依赖、回顾性设计。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098497/" target="_blank">Blood urea nitrogen and 30-day mortality in Sepsis with malignancy: A retrospective cohort study with point-of-care translational validation.</a>
+                </div>
+                <div class="card-byline">Qian L, Cheng J, Peng L, Zhong G, Guo J</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">Clinica chimica acta; international journal of clinical chemistry</span>
+                  
+                  <span class="badge-if">IF 1.6</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症合并恶性肿瘤患者ICU首日BUN每升高10 mg/dL，30天死亡风险增4%，且呈非线性；便携BUN试纸与Cobas高度一致
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098497/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究为回顾性队列（MIMIC-IV v2.2）加诊断一致性验证。纳入4189例脓毒症合并恶性肿瘤成人，30天死亡率31.6%（1323/4189）。Cox回归显示每10 mg/dL BUN升高与4%死亡风险增加相关，关联非线性（P&lt;0.001）：BUN&lt;45.03 mg/dL时HR 1.244（95%CI 1.147-1.350），此后进入平台期。另用165份临床样本验证纸基光化学BUN试纸，与Cobas 8000比较：Deming回归y=0.991x-0.103，r=0.993，平均偏差-0.51 mg/dL，95%一致性界限-7.57至6.55 mg/dL，四分类一致率89.1%（加权κ=0.911）；BUN≥40 mg/dL时敏感性97.0%、特异性99.0%。局限为回顾性设计、单数据库来源，试纸验证样本量偏小。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43084731/" target="_blank">Effect of Chlorhexidine Oral Care on Ventilator-Associated Events in 4 ICU Populations: A Retrospective Study.</a>
+                </div>
+                <div class="card-byline">Carroll Simmons JS, Peach BC, Sole ML, Xie R, Bourgault AM</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Dimensions of critical care nursing : DCCN</span>
+                  
+                  <span class="badge-if">IF 1.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  1567例机械通气患者中，每增加一次0.12%氯己定口腔护理，VAE风险反而升高4.9%，机械通气延长6小时、住院延长0.55天
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43084731/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>回顾性研究，利用佛罗里达州一家四级医院的电子病历临床数据库，纳入1567例机械通气患者，按心脏外科、心脏内科、多系统及神经ICU四个人群分析。暴露为每日两次0.12%氯己定（CHG）口腔护理，主要结局为呼吸机相关事件（VAE），次要结局包括住院时长、机械通气时长及院内死亡。心脏外科ICU的VAE率最高（每1000通气日47.13），神经ICU最低（5.87）。每增加一次CHG口腔护理与VAE风险升高4.9%相关，机械通气延长6小时、住院延长0.55天；住院时长（而非通气时长）部分介导了CHG暴露与VAE的关系。CHG未降低VAE、通气时长、住院时长或死亡率，作者认为CHG可能反映患者病情严重程度而非保护性干预。局限为单中心回顾性设计、死亡率分析受缺失数据限制，心脏外科样本代表性有限。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">critical illness</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098069/" target="_blank">Lactate infusion as therapeutic strategy in critically ill patients: A systematic review and meta-analysis.</a>
+                </div>
+                <div class="card-byline">Labenbacher S, Tedesi L, Dormio S, Labanca R, Fresilli S</div>
+                <div class="card-meta">
+                  <span class="rank-badge">7</span>
+                  <span class="card-journal">Journal of critical care</span>
+                  
+                  <span class="badge-if">IF 2.1</span>
+                  
+                  <span class="badge-evidence">综述</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  10项RCT共763例的Meta分析显示，高渗乳酸钠输注未降低危重患者死亡率，也未报告不良事件，证据仅为假设生成
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098069/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>系统综述与Meta分析，纳入10项随机对照试验共763例成人危重或大手术患者，全部比较高渗乳酸钠（HSL）与等渗或高渗液体，场景涵盖心脏与大血管手术、急性心衰、严重烧伤及创伤性脑损伤。主要终点为末次随访死亡率，各组间相似；其他次要结局（住院时长、神经功能良好存活、不良事件）及血流动力学指标（心率、血压、心输出量、液体平衡）均无差异。HSL未显示死亡获益，但未见不良事件报告，安全性可接受。作者强调因试验数量与样本量极小、人群异质，结论仅属假设生成，不足以改变临床实践（PROSPERO CRD420251124739）。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    <span class="tag">intensive care unit</span>
+                    
+                    <span class="tag">delirium</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098068/" target="_blank">Global variability in ICU sedation practices: Does it matter?</a>
+                </div>
+                <div class="card-byline">Patel MK, Rose L, Nazer L, Burry L, van der Jagt M</div>
+                <div class="card-meta">
+                  <span class="rank-badge">8</span>
+                  <span class="card-journal">Journal of critical care</span>
+                  
+                  <span class="badge-if">IF 2.1</span>
+                  
+                  <span class="badge-evidence">综述</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  叙述性综述指出ABCDEF集束化镇静实践在全球ICU间差异显著，并用CFIR框架解释障碍、提出缩小差异的实施策略
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098068/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>叙述性综述，聚焦成人ICU机械通气患者的镇静与阿片类药物输注实践。文章指出指南推荐ABCDEF集束化策略，包括镇痛优先、通过流程化或每日唤醒试验维持浅镇静、避免苯二氮䓬类，以及对谵妄高风险或躁动导致自主呼吸试验失败者优先使用右美托咪定（而非丙泊酚）。综述识别出不同ICU人群、同一或跨卫生系统的ICU之间、以及不同国家与地区之间在ABCDEF集束化及指南推荐镇静实践上存在显著差异，并应用实施研究整合框架（CFIR）从干预本身、外部影响、ICU组织、临床医生知识与经验及维持变革所需活动等方面解释差异成因，提出针对实施障碍的策略以减少全球差异、改善机械通气成人结局。属叙述性综述，摘要未报告效应量，结论为方向性建议。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+    
+  </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    由 <strong>arxiv-daily</strong> 自动生成 · 每天 12:00 推送<br>
+    
+    <a href="https://HenryHe-CCM.github.io/Daily-Digest-Assistant/archive.html" target="_blank">📚 查看历史归档</a> ·
+    
+    <a href="https://github.com/yzbcs/Daily-Digest-Assistant">GitHub</a>
+  </div>
+
+</div>
+</body>
+</html>
