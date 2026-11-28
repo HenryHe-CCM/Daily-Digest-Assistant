@@ -81,6 +81,25 @@ def _save_skip_html(reason: str):
 def main(dry_run: bool = False, target_date: date | None = None, entropy_only: bool = False):
     cfg = load_config()
 
+    # 同一天只推送一次。现在有三个触发器可能在同一天都跑：DSH 早上定时触发、
+    # GitHub cron 兜底、以及手动补发。已归档过就说明当天已经送达过，直接退出。
+    # 退出前把归档页回填成 preview.html，让后续 workflow 步骤变成幂等的空操作
+    # （否则 cp 会失败、或把占位页覆盖掉正常归档）。
+    archive_date = target_date or date.today()
+    archive_path = os.path.join(
+        "docs", "daily", f"{archive_date:%Y}", f"{archive_date:%m}",
+        f"{archive_date:%Y-%m-%d}.html",
+    )
+    if (not dry_run and cfg.get("skip_if_archived", True)
+            and os.environ.get("FORCE_RUN") != "1" and os.path.exists(archive_path)):
+        with open(archive_path, "r", encoding="utf-8") as src:
+            existing = src.read()
+        with open("preview.html", "w", encoding="utf-8") as dst:
+            dst.write(existing)
+        print(f"[SKIP] {archive_date:%Y-%m-%d} 已归档过（{archive_path}），"
+              f"跳过重复推送；如需强制重跑请设 FORCE_RUN=1")
+        return
+
     keywords       = cfg.get("keywords", [])
     categories     = cfg.get("categories", [])
     max_papers     = cfg.get("max_papers", 10)

@@ -79,6 +79,12 @@ candidate_pool: 50
 # ai       = 原版口径（做了什么 / 核心创新点 / 主要结论）
 prompt_profile: clinical
 
+# ── 去重 ────────────────────────────────────────────────────
+# 当天已归档（docs/daily/YYYY/MM/YYYY-MM-DD.html 已存在）时跳过推送。
+# 现在有三个触发器会在同一天跑：DSH 早上定时触发、GitHub cron 兜底、手动补发，
+# 这个开关保证同一天只发一封。需要强制重跑时设环境变量 FORCE_RUN=1。
+skip_if_archived: true
+
 # ── 邮件与 LLM 配置 ─────────────────────────────────────────
 # 发件邮箱服务商（163 / gmail / qq）
 # 收件人支持多个：在 GitHub Secrets 的 EMAIL_TO 里用英文逗号分隔即可，
