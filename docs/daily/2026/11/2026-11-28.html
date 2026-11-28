@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日推送 · 2026年11月28日</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #eef0f5; font-family: -apple-system, 'PingFang SC', 'Segoe UI', sans-serif; padding: 30px 16px; }
+
+.email-wrap { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 32px rgba(0,0,0,0.10); }
+
+/* ── Header ── */
+.header { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 28px 28px 20px; color: #fff; }
+.header .eyebrow { font-size: 11px; letter-spacing: 3px; color: #7ecfff; text-transform: uppercase; margin-bottom: 8px; }
+.header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.header .meta { font-size: 12px; color: #a0b8cc; margin-bottom: 14px; }
+.pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 13px; font-size: 11px; color: #d0e8ff; }
+.pill b { color: #7ecfff; }
+
+/* ── 两栏布局 ── */
+.content-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.col-header-row th { width: 50%; text-align: left; padding: 14px 14px 10px; background: #fff; border-bottom: 1px solid #e8eaef; }
+.col-header-arxiv { color: #3b5bdb; font-size: 13px; font-weight: 700; border-bottom: 2px solid #3b5bdb; display: inline-block; padding-bottom: 2px; }
+.col-header-xhs { color: #FF2442; font-size: 13px; font-weight: 700; border-bottom: 2px solid #FF2442; display: inline-block; padding-bottom: 2px; }
+
+/* 卡片行 */
+.card-row td { width: 50%; vertical-align: top; padding: 12px 14px; border-top: 1px solid #e8eaef; }
+.content-table.single-col .col-header-row th,
+.content-table.single-col .card-row td { width: 100%; }
+.card-row td:first-child { border-right: 1px solid #e8eaef; }
+.rest-cell { padding: 40px 14px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+
+/* ── Cards ── */
+.card { border: 1px solid #e8eaef; border-radius: 8px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+.card-inner { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #f3f4f6; color: #555; }
+.card-date { font-size: 10px; color: #aaa; white-space: nowrap; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.45; }
+.card-title a { color: inherit; text-decoration: none; }
+.card-title a:hover { text-decoration: underline; }
+.card-byline { font-size: 11px; color: #999; }
+
+/* 期刊 / 影响因子 / 证据等级 / 排序位次 */
+.card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 10.5px; color: #555; }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #1f3a8a; color: #fff; font-weight: 700; font-size: 10px; }
+.card-journal { font-style: italic; color: #444; }
+.badge-if { background: #eef2ff; color: #1f3a8a; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-evidence { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 1px 6px; }
+.badge-missing { background: #fff7ed; color: #b45309; border-radius: 4px; padding: 1px 6px; }
+
+.summary { background: #f4f6ff; border-left: 2px solid #3b5bdb; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary-xhs { background: #fff5f6; border-left: 2px solid #FF2442; border-radius: 0 4px 4px 0; padding: 6px 10px; font-size: 11px; color: #333; line-height: 1.6; margin-top: auto; }
+.summary .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #3b5bdb; display: block; margin-bottom: 2px; }
+.summary-xhs .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #FF2442; display: block; margin-bottom: 2px; }
+
+.card-links { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.btn { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; text-decoration: none; }
+.btn-arxiv { background: #b31b1b; color: #fff; }
+.btn-pdf { background: #1a73e8; color: #fff; }
+.btn-xhs { background: #FF2442; color: #fff; }
+
+/* ── details/summary 展开收起 ── */
+details { border-top: 1px solid #eef0f8; background: #fafbff; }
+details summary { display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer; font-size: 11px; font-weight: 600; color: #3b5bdb; list-style: none; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▶"; font-size: 9px; }
+details[open] summary::before { content: "▼"; }
+details summary:hover { background: #eef2ff; }
+.detail-body { padding: 8px 12px 12px; font-size: 11px; color: #444; line-height: 1.7; white-space: pre-wrap; border-top: 1px solid #eef0f8; }
+.detail-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b5bdb; display: block; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.footer { background: #f8f9ff; border-top: 1px solid #eaecf0; padding: 16px 24px; text-align: center; font-size: 11px; color: #aaa; }
+.footer a { color: #3b5bdb; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="email-wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">📬 Daily Digest</div>
+    <h1>今日推送</h1>
+    <div class="meta">2026年11月28日 · 星期六</div>
+    <div class="pills">
+      
+      <div class="pill">📄 PubMed <b>8</b> 篇</div>
+      
+      
+      <div class="pill">关键词：sepsis · septic shock · acute respiratory distress syndrome · ARDS · mechanical ventilation · noninvasive ventilation · 等 16 个</div>
+    </div>
+  </div>
+
+  
+  <p style="margin:16px 20px;color:#666;font-size:13px;line-height:1.6;">按 PubMed 收录日期 2026-11-26 至 2026-11-28 检索（关键词限定标题/摘要字段），命中 43 篇候选，由模型按重症医学相关性评分筛选，最终按证据等级与影响因子排序。</p>
+  
+
+  <!-- 两栏并排 -->
+  <table class="content-table single-col">
+    <!-- 表头 -->
+    <tr class="col-header-row">
+      <th>
+        &nbsp;&nbsp;<span class="col-header-arxiv">📄 PubMed 论文</span>
+        
+      </th>
+      
+    </tr>
+
+    
+      
+    
+
+    
+    
+
+    
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43094053/" target="_blank">Phosphate-containing versus phosphate-free replacement solution in critically ill patients requiring continuous renal replacement therapy: a randomized controlled trial.</a>
+                </div>
+                <div class="card-byline">Jin L, Zhou Z, Xu Q, Wang F, Chen K</div>
+                <div class="card-meta">
+                  <span class="rank-badge">1</span>
+                  <span class="card-journal">Renal failure</span>
+                  
+                  <span class="badge-if">IF 4.5</span>
+                  
+                  <span class="badge-evidence">RCT</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  含磷置换液使CRRT危重患者48小时低磷血症从68.9%降至15.6%（校正OR 0.05），但低血糖更常见
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43094053/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：多中心随机对照试验，90例需持续肾脏替代治疗（CRRT）的危重患者，每组45例，基线年龄、SOFA评分、脓毒症比例、CKD及血磷水平可比。干预或暴露与主要结局：干预为含磷 vs 无磷置换液，主要终点为CRRT前48小时低磷血症发生率。含磷组低磷血症发生率显著更低（15.6% vs 68.9%；校正OR 0.05，95%CI 0.01-0.18），且需补磷更少；含磷组低血糖更常见（8.9% vs 0%，p=0.042）；两组血肌酐与SOFA评分无显著差异。结论与局限：含磷置换液可减少低磷血症及补磷需求，但需监测血磷与血糖（尤其原有高磷血症者），样本量小（90例）、随访短，生化获益能否转化为临床结局改善尚待更大规模试验。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    <span class="tag">acute kidney injury</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098774/" target="_blank">Prognostic value of early renal recovery after cardiac surgery-associated acute kidney injury: a retrospective cohort study.</a>
+                </div>
+                <div class="card-byline">Kim SH, Yasui OW, Perry LA, Mamas MA, Sun LY</div>
+                <div class="card-meta">
+                  <span class="rank-badge">2</span>
+                  <span class="card-journal">British journal of anaesthesia</span>
+                  
+                  <span class="badge-if">IF 5.1</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  心脏术后AKI患者7天未恢复肾功能者长期全因死亡风险升高20%（aHR 1.20），90天转为CKD者升高12%
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098774/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：美国全国代表性电子病历平台（2016-2025）的回顾性队列，539658例心脏手术患者中111232例（20.6%）发生心脏手术相关AKI（CSA-AKI），平均年龄68岁，28%女性。干预或暴露与主要结局：暴露为AKI发生后7天（早期恢复）与90天（转为CKD）的肾功能恢复状态，完全恢复定义为血肌酐回落至&lt;1.5倍基线且不超过基线26 μM且无需透析；主要终点为全因死亡，校正AKI分期及预设协变量。早期分析中90029/111232例（80.9%）7天内恢复；CKD转化分析中94064/100916例（93.2%）90天内恢复。早期未恢复（aHR 1.20，95%CI 1.15-1.25，P&lt;0.001）与90天转为CKD（aHR 1.12，95%CI 1.04-1.20，P=0.002）均独立关联更高死亡风险，各AKI分期结果一致。结论与局限：恢复延迟与CKD转化独立预示长期死亡升高，但为观察性设计。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">prone positioning</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-27</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43102777/" target="_blank">Digital twin-based simulation of physiological responses to prone positioning in mechanically ventilated ICU patients.</a>
+                </div>
+                <div class="card-byline">Hilders PA, Lijović L, Reuland MC, Otten M, Jagesar A</div>
+                <div class="card-meta">
+                  <span class="rank-badge">3</span>
+                  <span class="card-journal">Intensive care medicine experimental</span>
+                  
+                  <span class="badge-if">IF 3.4</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  数字孪生模拟显示俯卧位使机械通气患者PaO2/FiO2平均升高51.2 mmHg，PF&lt;200者获益最大，机械功率升高12.6 J/min
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43102777/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/11790099?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：基于AmsterdamUMCdb的回顾性研究，纳入4935例机械通气患者，其中469例有首次俯卧位事件、4466例从未俯卧位。干预或暴露与主要结局：以循环神经网络编码患者个体化表征并构建对照合成孪生，估计俯卧位的多信号短期效应（PaO2/FiO2、机械功率、通气比、动态顺应性、估算心输出量），并以安慰剂检验评估模拟保真度。俯卧位总体使PaO2/FiO2升高（ATT +51.2 mmHg，95%CI 41.6-60.9，p&lt;0.001），PF&lt;100及100≤PF&lt;200者效应最大，PF≥200者无显著效应；机械功率升高（+12.6 J/min，95%CI 11.2-14.1，p&lt;0.001），动态顺应性下降（-26.4 mL/cmH2O，95%CI -28.9至-23.8，p&lt;0.001），通气比轻度升高（+0.11，95%CI 0.04-0.18，p=0.002），估算心输出量无显著变化。结论与局限：数字孪生可给出临床合理的多结局生理效应估计，氧合结果与既有试验证据一致，但为观察性数据模拟，存在混杂与模型假设限制。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-25</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43095222/" target="_blank">Empirical broad-spectrum antibiotic use, de-escalation, and outcomes in Enterobacterales bloodstream infections: a retrospective observational study.</a>
+                </div>
+                <div class="card-byline">Capsoni N, Ottolenghi S, Bettina M, De Felice L, Pagani L</div>
+                <div class="card-meta">
+                  <span class="rank-badge">4</span>
+                  <span class="card-journal">JAC-antimicrobial resistance</span>
+                  
+                  <span class="badge-if">IF 3.2</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  急诊肠杆菌血流感染中57.1%合并脓毒症、16.5%脓毒症休克，脓毒症休克院内死亡OR 5.49；非耐药株57.7%被过度广谱覆盖而降阶梯仅31.7%
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43095222/" target="_blank">PubMed</a>
+                  
+                  <a class="btn btn-pdf" href="https://europepmc.org/articles/PMC13798645?pdf=render" target="_blank">PDF</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：意大利Niguarda医院急诊科2019-2023年回顾性观察研究，纳入667例单一肠杆菌血流感染成人。干预或暴露与主要结局：评估经验性与目标性抗生素处方及结局。57.1%合并脓毒症，16.5%脓毒症休克；三代头孢耐药肠杆菌（3GCR-E）占25.6%，其经验性治疗不恰当风险高10倍（OR 10.7，95%CI 6.10-18.74）。哌拉西林-他唑巴坦为最常用经验用药（54.3%）；非3GCR-E者中57.7%接受了不必要的广谱覆盖，而符合降阶梯条件者仅31.7%实施。院内总死亡率10.2%，3GCR-E与非3GCR-E无差异（OR 0.89，95%CI 0.49-1.6）；死亡与年龄（OR 1.55）、Charlson指数（OR 1.24）、免疫抑制（OR 2.07）、呼吸道感染（OR 3.13）及脓毒症休克（OR 5.49，95%CI 2.95-10.21）相关，尿路感染生存更高（OR 0.43）。结论与局限：需加强3GCR-E早期风险分层与抗菌药物管理，但为单中心回顾性设计。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">ARDS</span>
+                    
+                    <span class="tag">acute kidney injury</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-27</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43101915/" target="_blank">Associations of Naples Prognostic Score with Acute Kidney Injury and the Risk of All-Cause Death in Critically Ill Patients with Sepsis: A Retrospective Cohort Study Utilizing MIMIC.</a>
+                </div>
+                <div class="card-byline">Zhang X, Wang Q, Chen S</div>
+                <div class="card-meta">
+                  <span class="rank-badge">5</span>
+                  <span class="card-journal">Journal of intensive care medicine</span>
+                  
+                  <span class="badge-if">IF 3.1</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症危重患者中Naples预后评分每增1分，AKI风险OR 1.194、30天死亡HR 1.168，MIMIC-IV 5680例验证
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43101915/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：基于MIMIC-IV的回顾性队列，纳入5680例脓毒症危重患者，中位年龄66.48岁，58.13%为男性。干预或暴露与主要结局：暴露为Naples预后评分（NPS，整合炎症与营养指标），主要终点为AKI，次要终点为严重AKI及30/90/365天全因死亡。多因素logistic回归示NPS每增1分AKI风险升高（OR 1.194，95%CI 1.120-1.274，P&lt;.001），严重AKI OR 1.245（95%CI 1.181-1.313）；Cox模型示每增1分30天死亡风险升高（HR 1.168，95%CI 1.089-1.252，P&lt;.001），高NPS组30天生存率更低。结论与局限：作者认为高NPS与AKI及全因死亡风险升高相关，但为单库回顾性观察设计，NPS的增量预后价值与临床实用性尚需外部验证。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    <span class="tag">septic shock</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-27</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098348/" target="_blank">Preoperative Sepsis Severity and Outcomes After Appendectomy for Complicated Appendicitis in Children: A NSQIP-P Analysis.</a>
+                </div>
+                <div class="card-byline">Wiggins WB, Hernandez-Rios M, Decker E, Neal D, Cruz-Ayala J</div>
+                <div class="card-meta">
+                  <span class="rank-badge">6</span>
+                  <span class="card-journal">Journal of pediatric surgery</span>
+                  
+                  <span class="badge-if">IF 2.2</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  儿童复杂性阑尾炎术前脓毒症与脓毒症休克使术后30天并发症风险分别升高64%（aOR 1.64）与178%（aOR 2.78），脓毒症休克死亡率2.9%
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098348/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：基于2016-2022年美国ACS NSQIP-Pediatric数据库的回顾性队列，纳入34436例18岁以下因复杂性阑尾炎行阑尾切除术患儿。干预或暴露与主要结局：按术前72小时内脓毒症严重度分为无脓毒症（27.6%）、SIRS（8.7%）、脓毒症（63.4%）与脓毒症休克（0.3%），主要终点为30天复合术后并发症。复合并发症发生率依次为11.1%、11%、17.5%、43.1%（P&lt;.001）；器官腔隙手术部位感染、非计划再手术、术后经皮引流及住院时间在脓毒症与脓毒症休克组最高，脓毒症休克组3例死亡（2.9%，P&lt;.001）。多因素校正人口学与临床协变量后，脓毒症（aOR 1.64，95%CI 1.53-1.77）与脓毒症休克（aOR 2.78，95%CI 1.67-4.62）均与并发症升高相关。结论与局限：术前脓毒症严重度与术后不良结局相关，有助于风险分层，但为回顾性数据库研究、儿童人群。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">mechanical ventilation</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098503/" target="_blank">Reversed airflow during asynchronous volume controlled mechanical ventilation in Out-of-Hospital Cardiac Arrest: a physiological observational study.</a>
+                </div>
+                <div class="card-byline">Duchatelet C, Vergotte M, Tackaert T, Vanwulpen M, Hachimi-Idrissi S</div>
+                <div class="card-meta">
+                  <span class="rank-badge">7</span>
+                  <span class="card-journal">Resuscitation</span>
+                  
+                  <span class="badge-if">IF 2.0</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  院外心脏骤停机械通气患者中83.3%出现反向气流，172次通气中82.0%发生，中位反向气流量61 mL
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098503/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：单中心描述性横断面生理观察研究，纳入12例经气管插管的院外心脏骤停成人（中位年龄68岁，58.3%男性），由医师随车院前团队救治，5例（41.7%）获得持续自主循环恢复。干预或暴露与主要结局：插管后以Oxylog 3000转运呼吸机行容量控制通气、无PEEP，持续人工胸外按压；经两根导管记录气管内压以计算气流与通气参数，定义反向气流为机械吸气相出现呼出气流，分析插管后第一分钟。反向气流发生于10例（83.3%，95%CI 55.2-95.3）及172次可分析通气中的141次（82.0%，95%CI 75.6-87.0），中位反向气流量61 mL（42-80）。中位通气频率14次/分，潮气量324 mL，分钟通气量4.8 L/min，气道峰压46 cmH2O。结论与局限：非同步容量控制通气下反向气流频繁发生，样本量仅12例、单中心，其生理与临床意义待进一步研究。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+      <tr class="card-row">
+        <!-- 左栏：arXiv -->
+        <td>
+          
+            
+            <div class="card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    
+                    <span class="tag">sepsis</span>
+                    
+                    
+                  </div>
+                  <span class="card-date">2026-11-26</span>
+                </div>
+                <div class="card-title">
+                  <a href="https://pubmed.ncbi.nlm.nih.gov/43098497/" target="_blank">Blood urea nitrogen and 30-day mortality in Sepsis with malignancy: A retrospective cohort study with point-of-care translational validation.</a>
+                </div>
+                <div class="card-byline">Qian L, Cheng J, Peng L, Zhong G, Guo J</div>
+                <div class="card-meta">
+                  <span class="rank-badge">8</span>
+                  <span class="card-journal">Clinica chimica acta; international journal of clinical chemistry</span>
+                  
+                  <span class="badge-if">IF 1.6</span>
+                  
+                  <span class="badge-evidence">队列/观察</span>
+                </div>
+                
+                <div class="summary">
+                  <span class="label">💡 一句话总结</span>
+                  脓毒症合并恶性肿瘤患者ICU首日BUN每升高10 mg/dL，30天死亡风险增4%，45.03 mg/dL以下呈线性上升；便携BUN试纸与Cobas一致性良好
+                </div>
+                
+                <div class="card-links">
+                  <a class="btn btn-arxiv" href="https://pubmed.ncbi.nlm.nih.gov/43098497/" target="_blank">PubMed</a>
+                  
+                </div>
+              </div>
+              
+              <details>
+                <summary>📋 详细解读</summary>
+                <div class="detail-body"><span class="detail-label">论文解读</span>研究设计与人群：基于MIMIC-IV v2.2的回顾性队列，纳入4189例脓毒症合并恶性肿瘤成人；另用165份临床样本做即时检测转化验证。干预或暴露与主要结局：暴露为ICU首日BUN，主要终点为30天死亡。30天死亡率31.6%（1323/4189）；充分校正后BUN每升高10 mg/dL死亡风险增4%，关系呈非线性（P&lt;0.001），在45.03 mg/dL以下每10 mg/dL HR 1.244（95%CI 1.147-1.350），此后进入平台期。纸基光化学BUN试纸与Cobas 8000一致性良好（Deming回归y=0.991x-0.103，r=0.993），平均偏倚-0.51 mg/dL，95%一致性界限-7.57至6.55 mg/dL，四分类符合率89.1%（加权κ=0.911），BUN≥40 mg/dL时敏感度97.0%、特异度99.0%。结论与局限：早期BUN独立关联30天死亡且可即时检测，但为回顾性设计，需前瞻验证。</div>
+              </details>
+              
+            </div>
+          
+        </td>
+
+        
+      </tr>
+      
+    
+  </table>
+
+  
+  <p style="margin:0 20px 18px;color:#8a8a99;font-size:11px;line-height:1.6;">影响因子取自 OpenAlex 的期刊近两年平均被引（2yr mean citedness），是 JCR 官方影响因子的公开替代指标，数值与 JCR 不完全一致；证据等级按 PubMed 文献类型与摘要设计特征归类。</p>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    由 <strong>arxiv-daily</strong> 自动生成 · 每天 12:00 推送<br>
+    
+    <a href="https://HenryHe-CCM.github.io/Daily-Digest-Assistant/archive.html" target="_blank">📚 查看历史归档</a> ·
+    
+    <a href="https://github.com/yzbcs/Daily-Digest-Assistant">GitHub</a>
+  </div>
+
+</div>
+</body>
+</html>
